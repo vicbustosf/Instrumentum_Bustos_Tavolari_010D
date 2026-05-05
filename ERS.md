@@ -2,53 +2,53 @@ Instrumentum
 
 El sistema Instrumentum opera como una plataforma de gestión integral basada en una arquitectura de capas, diseñada para centralizar la información técnica de músicos y optimizar su rendimiento en vivo y en estudio. Su comportamiento se desglosa en los siguientes núcleos operativos:
 ------------------------------------------------------------------
-Descripción del Comportamiento del Sistema:
-* Gestión de Identidad y Aislamiento de Datos
-  - El sistema implementa un entorno de seguridad basado en Spring Security y BCrypt para garantizar que cada músico trabaje en un espacio privado.
-  - Las credenciales de acceso son procesadas mediante algoritmos de hashing antes de su almacenamiento en MySQL.
-  - El comportamiento del software asegura que todas las consultas a la base de datos estén filtradas por el ID del usuario autenticado, impidiendo que los   datos de un inventario sean visibles para otros usuarios.
+Descripción del Comportamiento del Sistema
 
-* Ciclo de Vida del Inventario (Gear Management)
-  - El sistema presenta un comportamiento dinámico en la captura de datos: si el usuario registra un instrumento, el software habilita campos de maderas y    pastillas; si registra electrónica, habilita campos de voltaje y amperaje (mA).
-  - Gestión de Estados: El sistema calcula automáticamente el tiempo transcurrido desde la última intervención técnica. Si el intervalo supera los 6 meses, el estado del equipo cambia visualmente para indicar una alerta de mantenimiento preventivo.
+Gestión de Datos y Persistencia
+El sistema opera sobre una base de datos MySQL gestionada mediante XAMPP, donde se centraliza la información de músicos, bandas y equipamiento. La interacción con la lógica de negocio se realiza a través de peticiones HTTP probadas y documentadas en Postman, asegurando que el flujo de datos entre el cliente y el servidor sea íntegro y siga las reglas definidas en el modelo relacional.
 
-* Dinámica del Módulo de Mantenimiento
-  - Este módulo funciona como una bitácora histórica vinculada de forma inmutable a cada activo del inventario.
-  - Integridad de Datos: El sistema aplica reglas de borrado en cascada para asegurar que, al eliminar un equipo, sus registros de servicio asociados también desaparezcan, manteniendo la base de datos limpia y eficiente.
+Ciclo de Vida del Inventario (Gear Management)
+El sistema presenta un comportamiento dinámico en la captura de datos procesados desde el backend:
 
-* Inteligencia del Rig Builder (Configuración de Canciones)
-  - El núcleo del sistema permite gestionar la relación compleja entre el repertorio y el equipamiento.
-  - Gestión de Cadena de Señal: El usuario define un orden lógico de conexión (Posición 1, 2, 3...) para sus equipos dentro de una canción específica.
-  - Persistencia de Contexto: Por cada asignación, el sistema permite guardar notas sobre la técnica de ejecución y el seteo preciso de las perillas, funcionando como un manual de instrucciones para presentaciones en vivo.
+Segmentación por Tipo: Si se registra un instrumento, el software procesa atributos de maderas y pastillas. Si se registra un equipo electrónico, se validan campos de voltaje y amperaje (mA).
 
-* Lógica de Cálculo y Validación Eléctrica
-  - El software integra un algoritmo de validación de carga para configuraciones de pedales.
-  - Agregación Automática: Al cargar el setup de una canción, el sistema suma los valores de miliamperios (mA) de todos los dispositivos activos.
-  - Alertas Preventivas: El total se contrasta con la capacidad de la fuente de poder registrada; si el consumo supera el límite teórico, el sistema dispara una advertencia visual para prevenir fallos eléctricos durante el uso.
+Gestión de Estados: El sistema calcula automáticamente el tiempo transcurrido desde la última intervención técnica registrada en la tabla Mantenimiento. Si el intervalo supera los 6 meses, el estado del equipo se marca internamente para disparar una alerta de mantenimiento preventivo en las respuestas del sistema.
 
-* Procesamiento y Visualización de la Interfaz
-  - El sistema utiliza el motor de plantillas Thymeleaf para el renderizado del lado del servidor, optimizando la entrega de contenido HTML ya procesado al navegador.
-  - Comportamiento Responsive: Gracias a la integración de Bootstrap, la interfaz ajusta su disposición de forma automática, permitiendo que la consulta de los Technical Riders sea tan eficiente en un smartphone como en una estación de trabajo de estudio.
------------------------------------------------------------------
+Dinámica del Módulo de Mantenimiento
+Este módulo funciona como una bitácora histórica vinculada de forma inmutable a cada activo del inventario mediante el id_equipo.
+
+Integridad de Datos: El sistema aplica reglas de borrado en cascada. Al eliminar un equipo de la base de datos, sus registros de servicio asociados desaparecen automáticamente, manteniendo la integridad referencial.
+
+Inteligencia del Rig Builder (Configuración de Canciones)
+El núcleo del sistema permite gestionar la relación compleja entre el repertorio y el equipamiento.
+
+Gestión de Cadena de Señal: Mediante la tabla Equipo_cancion, se define un orden lógico de conexión (Posición 1, 2, 3...) para los equipos dentro de una canción específica.
+
+Persistencia de Contexto: Por cada asignación, el sistema permite persistir notas sobre la técnica de ejecución y el seteo preciso de las perillas (seteo), funcionando como un manual técnico para el músico.
+
+Lógica de Cálculo y Validación Eléctrica
+El software integra un algoritmo de validación de carga para configuraciones de pedales y electrónica.
+
+Agregación Automática: Al consultar el setup de una canción, el sistema suma los valores de miliamperios (mA) de todos los dispositivos activos vinculados.
+
+Alertas Preventivas: El total se contrasta con la capacidad de la fuente de poder registrada; si el consumo supera el límite teórico, el sistema genera un mensaje de advertencia para prevenir fallos eléctricos.
+--------------------------------------------------------------------
 Requisitos Funcionales (RF)
-- RF-01: Gestión de Inventario de Equipos: CRUD completo de equipos (instrumentos, amplificadores, pedales). Atributos específicos: maderas y pastillas para instrumentos; voltaje (9V/12V), consumo (mA) y circuito para electrónica.
-- RF-02: Módulo de Mantenimiento Preventivo: Bitácora de servicios asociada a equipos específicos. Alerta visual para equipos sin mantenimiento en más de 6 meses.
-- RF-03: Configuración por Canción (Rig Builder): CRUD de canciones con asignación N:N de equipos. Especificación de orden de cadena de señal, técnica de ejecución y seteo de perillas.
-- RF-04: Exportación de Technical Rider: Generación de listas de equipos por canción o setlist en formato PDF/Texto.
-- RF-05: Calculadora de Carga: Algoritmo para sumar consumo (mA) de pedales por canción y comparar contra el límite de la fuente de poder (con advertencia de exceso).
-- RF-06: Gestión de Usuarios: Registro y autenticación mediante BCrypt para asegurar el aislamiento de datos entre usuarios.
-- RF-07: Búsqueda y Filtros: Búsqueda por metadatos (nombre, tipo, marca) y filtrado de equipos en estado de mantenimiento pendiente.
 
+- RF-01: Gestión de Inventario de Equipos: CRUD completo de equipos. Atributos: maderas/pastillas para instrumentos; voltaje, consumo (mA) y circuito para electrónica.
+- RF-02: Módulo de Mantenimiento Preventivo: Registro de servicios asociados a equipos. Lógica de alerta para equipos con más de 6 meses sin servicio.
+- RF-03: Configuración por Canción (Rig Builder): CRUD de canciones con asignación N:N de equipos, incluyendo orden de cadena de señal y seteo de perillas.
+- RF-04: Gestión de Usuarios y Bandas: Registro y administración de los datos de usuarios y sus respectivas agrupaciones musicales.
+- RF-05: Calculadora de Carga: Algoritmo para sumar consumo (mA) por canción y comparar contra el límite de la fuente de poder.
+- RF-06: Búsqueda y Filtros: Búsqueda por metadatos (nombre, tipo, marca) a través de parámetros de consulta en los endpoints.
 ---------------------------------------------------------------
-
 Requisitos No Funcionales (RNF)
-- RNF-01: Tecnología: Desarrollo en Java 21 con Spring Boot 4.0.5. Persistencia mediante Spring Data JPA sobre MySQL (gestionado vía XAMPP). Interfaz con Thymeleaf(Motor de plantillas Springboot Java del lado del servidor, para renderizar archivos HTML) y Bootstrap(framework front-end para el desarrollo web responsivo (adaptable a móviles)).
-- RNF-02: Rendimiento: Operaciones CRUD con tiempo de respuesta inferior a 2 segundos. Cálculos de carga eléctrica ejecutados en menos de 1 segundo.
-- RNF-03: Seguridad: Protección contra inyección SQL nativa de JPA. Encriptación de contraseñas con BCrypt y validación de datos de entrada (Bean Validation).
-- RNF-04: Usabilidad: Interfaz responsive para visualización en distintos dispositivos y mensajes de error descriptivos.
+- RNF-01: Tecnología: Desarrollo en Java 21 con Spring Boot 3.4.16. Persistencia mediante Spring Data JPA sobre MySQL (XAMPP). Entorno de desarrollo en VS Code.
+- RNF-02: Interfaz de Pruebas: Validación de endpoints y lógica de negocio mediante Postman.
+- RNF-03: Rendimiento: Operaciones CRUD con tiempo de respuesta inferior a 2 segundos.
+- RNF-04: Seguridad de Datos: Protección contra inyección SQL nativa mediante el uso de JPA y validación de datos de entrada (Bean Validation).
 - RNF-05: Mantenibilidad: Código organizado por capas (Controller, Service, Repository) y uso de Lombok para limpieza de código.
-- RNF-06: Disponibilidad: Garantizada 24/7 para el entorno de desarrollo local y despliegues básicos.
-- RNF-07: Integridad de Datos: Configuración de eliminación en cascada para mantenimientos y restricciones para proteger equipos asignados a canciones activas.
+- RNF-06: Integridad de Datos: Configuración de eliminación en cascada para mantenimientos y restricciones para proteger equipos asignados a canciones activas.
 
 
 
