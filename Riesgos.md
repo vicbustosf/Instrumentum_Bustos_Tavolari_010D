@@ -38,12 +38,6 @@ R05 | Inconsistencia por Eliminación en Cascada (RNF-07)
 
 Riesgos Operacionales (Impacto Bajo)
 
-R06 | Latencia en el Motor de Plantillas (Thymeleaf)
-* Categoría: Rendimiento
-* Probabilidad: Media
-* Impacto: Bajo
-* Mitigación: Evitar el procesamiento de bucles anidados complejos dentro de los archivos .html y asignar el procesamiento de datos pesado a la capa de Service en Java.
-
 R07 | Fallas en Generación de Technical Rider (RF-04)
 * Categoría: Funcional
 * Probabilidad: Media
