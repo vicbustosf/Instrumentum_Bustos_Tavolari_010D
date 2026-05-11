@@ -31,7 +31,6 @@ El software integra un algoritmo de validación de carga para configuraciones de
 
 Agregación Automática: Al consultar el setup de una canción, el sistema suma los valores de miliamperios (mA) de todos los dispositivos activos vinculados.
 
-Alertas Preventivas: El total se contrasta con la capacidad de la fuente de poder registrada; si el consumo supera el límite teórico, el sistema genera un mensaje de advertencia para prevenir fallos eléctricos.
 --------------------------------------------------------------------
 Requisitos Funcionales (RF)
 
