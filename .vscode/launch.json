@@ -1,0 +1,65 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-ServiceUsuarioApplication<service-usuario>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "cl.instrumentum.service_usuario.ServiceUsuarioApplication",
+            "projectName": "service-usuario",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env",
+            "vmArgs": " -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=57844 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dspring.jmx.enabled=true -Djava.rmi.server.hostname=localhost -Dspring.application.admin.enabled=true -Dspring.boot.project.name=service-usuario"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-ServiceSpecsApplication<service-specs>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "cl.instrumentum.service_specs.ServiceSpecsApplication",
+            "projectName": "service-specs",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-ServiceRigApplication<service-rig>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "cl.instrumentum.service_rig.ServiceRigApplication",
+            "projectName": "service-rig",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-ServiceMantenimientoApplication<service-mantenimiento>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "cl.instrumentum.service_mantenimiento.ServiceMantenimientoApplication",
+            "projectName": "service-mantenimiento",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-ServiceInventarioApplication<service-inventario>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "cl.instrumentum.service_inventario.ServiceInventarioApplication",
+            "projectName": "service-inventario",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-ApiGatewayApplication<api-gateway>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "cl.instrumentum.api_gateway.ApiGatewayApplication",
+            "projectName": "api-gateway",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}

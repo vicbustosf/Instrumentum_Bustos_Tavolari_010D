@@ -1,0 +1,33 @@
+server:
+  port: 8181
+
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      routes:
+        - id: service-usuario
+          uri: http://localhost:8081
+          predicates:
+            - Path=/api/v1/usuarios/**, /api/v1/bandas/**
+
+        - id: service-inventario
+          uri: http://localhost:8082
+          predicates:
+            - Path=/api/v1/equipos/**, /api/v1/marcas/**, /api/v1/categorias/**
+
+        - id: service-specs
+          uri: http://localhost:8083
+          predicates:
+            - Path=/api/v1/especs/**
+
+        - id: service-mantenimiento
+          uri: http://localhost:8084
+          predicates:
+            - Path=/api/v1/mantenimientos/**
+
+        - id: service-rig
+          uri: http://localhost:8085
+          predicates:
+            - Path=/api/v1/canciones/**, /api/v1/equipos/en-cancion/**
