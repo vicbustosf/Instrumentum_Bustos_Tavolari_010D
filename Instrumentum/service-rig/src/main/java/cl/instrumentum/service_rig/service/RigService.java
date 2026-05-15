@@ -101,8 +101,12 @@ public class RigService {
     }
 
     public Map<String, Object> obtenerSetupCompleto(Long cancionId) {
+        //Instancia la canción, si no existe lanza error 404
         Cancion cancion = cancionRepository.findById(cancionId).orElseThrow(RuntimeException::new);
+
+        //Busca los equipos asociados a la canción, ordenados por posición
         List<EquipoCancion> equipos = equipoCancionRepository.findByCancionOrderByPosicionAsc(cancion);
+        //map que devuelve un objeto con la canción y la lista de equipos asociados a esa canción
         return Map.of("cancion", cancion, "equipos", equipos);
     }
 }

@@ -13,6 +13,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class EspecificacionInstrumento {
+
+    //lo mismo que en EspecificacionElectronica,     
     @Id
     @Column(name = "id_equipo")
     @NotNull

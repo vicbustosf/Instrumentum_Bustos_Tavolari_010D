@@ -30,6 +30,7 @@ public class SpecsService {
         electronicaRepository.save(new EspecificacionElectronica(3L, "9V", 15.0, "Distortion"));
     }
 
+    
     private void validarEquipo(Long equipoId) {
         webClientBuilder.build()
                 .get()
@@ -52,14 +53,21 @@ public class SpecsService {
     }
 
     public Object obtenerEspecificacionPorEquipo(Long equipoId) {
+
         Optional<EspecificacionInstrumento> inst = instrumentoRepository.findById(equipoId);
-        if (inst.isPresent()) return inst.get();
+        if (inst.isPresent()){
+                return inst.get();
+            }
+
         Optional<EspecificacionElectronica> elec = electronicaRepository.findById(equipoId);
-        return elec.orElse(null);
+            return elec.orElse(null);
     }
 
+    //Metodo cascada para eliminar especificaciones al eliminar un equipo
     public void eliminarPorEquipoId(Long equipoId) {
+
         instrumentoRepository.deleteById(equipoId);
+
         electronicaRepository.deleteById(equipoId);
     }
 }

@@ -13,6 +13,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class EspecificacionElectronica {
+
+    // El id de esta tabla es el mismo que el id del equipo al que corresponde, 
+    // por eso no se genera automáticamente
     @Id
     @Column(name = "id_equipo")
     @NotNull
@@ -24,6 +27,7 @@ public class EspecificacionElectronica {
     @NotNull
     private Double consumo;
 
+    // Ejemplo: "Transistor", "Valvular", "Digital"
     @NotBlank
     @Column(name = "tipo_circuito")
     private String tipoCircuito;

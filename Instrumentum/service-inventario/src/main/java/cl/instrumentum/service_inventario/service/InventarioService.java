@@ -24,6 +24,8 @@ public class InventarioService {
     @Autowired
     private WebClient.Builder webClientBuilder;
 
+
+    // Método para cargar datos de prueba al iniciar la aplicación (si la base de datos es vacía)
     @PostConstruct
     public void cargarDatosPrueba() {
         if (marcaRepository.count() > 0) return;
@@ -162,3 +164,5 @@ Este en mantenimieto "POST http://localhost:8085/api/v1/canciones/2/equipos" fun
                      "PUT http://localhost:8085/api/v1/canciones/2/equipos/1" funciona (200) pero la respuesta es muy larga de 3667 lineas.
                      "GET http://localhost:8085/api/v1/canciones/2/setup-completo" Funciona (200) pero la respuesta es muy larga de 3667 lineas.
 */
+
+//yA NO - OSCAR

@@ -32,6 +32,7 @@ public class EspecsController {
         return ResponseEntity.status(HttpStatus.CREATED).body(guardada);
     }
 
+     
     @GetMapping("/equipo/{equipoId}")
     public ResponseEntity<?> obtenerPorEquipo(@PathVariable Long equipoId) {
         Object espec = specsService.obtenerEspecificacionPorEquipo(equipoId);

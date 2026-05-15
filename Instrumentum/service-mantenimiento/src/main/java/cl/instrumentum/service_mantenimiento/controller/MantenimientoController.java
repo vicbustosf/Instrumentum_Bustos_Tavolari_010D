@@ -18,17 +18,22 @@ public class MantenimientoController {
     @Autowired
     private MantenimientoService mantenimientoService;
 
-    @PostMapping
+    @PostMapping//Registrar nuevo mantenimiento, se espera un JSON con los datos del mantenimiento 
+    //              pero debe existir el equipo al que se le asigna.
     public ResponseEntity<Mantenimiento> registrar(@Valid @RequestBody Mantenimiento mantenimiento) {
         Mantenimiento guardado = mantenimientoService.registrarMantenimiento(mantenimiento);
         return ResponseEntity.status(HttpStatus.CREATED).body(guardado);
     }
 
+    // Listar mantenimientos por equipo, pide ID del equipo como parámetro en la URL
     @GetMapping("/equipo/{equipoId}")
     public List<Mantenimiento> listarPorEquipo(@PathVariable Long equipoId) {
         return mantenimientoService.listarPorEquipo(equipoId);
     }
 
+    // Endpoint para verificar si un equipo requiere mantenimiento, 
+    // devuelve un JSON con {"alerta": true/false}, si es true, el equipo requiere 
+    // mantenimiento, si es false, no lo requiere. 
     @GetMapping("/alerta/{equipoId}")
     public ResponseEntity<Map<String, Boolean>> alertaMantenimiento(@PathVariable Long equipoId) {
         boolean alerta = mantenimientoService.requiereMantenimiento(equipoId);
