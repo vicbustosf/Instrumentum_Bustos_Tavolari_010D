@@ -9,8 +9,10 @@ import cl.instrumentum.service_usuario.model.Usuario;
 
 @Repository
 public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
+    // Método para encontrar un usuario por su username
     Usuario findByUsername(String username);
 
+    // Método para encontrar usuarios por el ID de su banda
     @Query("""
         SELECT u 
         FROM Usuario u 

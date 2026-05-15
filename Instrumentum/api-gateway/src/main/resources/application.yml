@@ -15,7 +15,11 @@ spring:
         - id: service-rig-equipos
           uri: http://localhost:8085
           predicates:
+<<<<<<< HEAD
             - Path=/api/v1/equipos/en-cancion/**
+=======
+            - Path=/api/v1/equipos/enCancion/**
+>>>>>>> mi-respaldo
 
         - id: service-inventario
           uri: http://localhost:8082

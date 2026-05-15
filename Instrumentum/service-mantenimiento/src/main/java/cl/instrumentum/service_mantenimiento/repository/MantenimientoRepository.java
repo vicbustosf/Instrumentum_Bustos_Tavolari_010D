@@ -9,6 +9,7 @@ public interface MantenimientoRepository extends JpaRepository<Mantenimiento, Lo
 
     List<Mantenimiento> findByEquipoIdOrderByFechaDesc(Long equipoId);
 
+   
     Optional<Mantenimiento> findTopByEquipoIdOrderByFechaDesc(Long equipoId);
     
     void deleteByEquipoId(Long equipoId);

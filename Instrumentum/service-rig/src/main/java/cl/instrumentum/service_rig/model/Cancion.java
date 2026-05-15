@@ -13,6 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Cancion {
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -21,6 +22,10 @@ public class Cancion {
     private Long bandaId;
     private Integer duracionSegundos;
 
+<<<<<<< HEAD
+=======
+//ORPHAN REMOVAL: Si se elimina una canción, también se eliminan las asignaciones de equipos a esa canción.
+>>>>>>> mi-respaldo
     @OneToMany(mappedBy = "cancion", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<EquipoCancion> equiposAsignados = new ArrayList<>();
 }

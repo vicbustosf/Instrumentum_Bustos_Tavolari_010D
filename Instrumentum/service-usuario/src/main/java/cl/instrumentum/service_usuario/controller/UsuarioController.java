@@ -34,8 +34,13 @@ public class UsuarioController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Usuario> actualizar(@PathVariable Long id, @RequestBody Usuario datos) {
+<<<<<<< HEAD
         return usuarioService.buscarUsuarioPorId(id)
                 .map(u -> {
+=======
+        return usuarioService.buscarUsuarioPorId(id).map(u -> //-> significa "si encuentra el usuario, haz esto"
+                { 
+>>>>>>> mi-respaldo
                     u.setUsername(datos.getUsername());
                     u.setEmail(datos.getEmail());
                     u.setRol(datos.getRol());

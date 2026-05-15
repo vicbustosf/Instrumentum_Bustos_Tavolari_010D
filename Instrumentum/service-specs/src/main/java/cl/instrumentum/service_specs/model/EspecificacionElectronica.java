@@ -16,8 +16,13 @@ public class EspecificacionElectronica {
  
     @Id
     @Column(name = "id_equipo")
+<<<<<<< HEAD
     // FIX: se quitó @NotNull. El id viene del @PathVariable del controlador,
     // no del body. Con @NotNull el validador rechazaba el request con 400.
+=======
+    //Se quitó @NotNull. El id viene del @PathVariable del controlador,
+    // no del body, Con @NotNull el validador rechazaba el request con 400.
+>>>>>>> mi-respaldo
     private Long idEquipo;
  
     @NotNull

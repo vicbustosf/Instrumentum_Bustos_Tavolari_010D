@@ -158,4 +158,20 @@ public class InventarioService {
  
         equipoRepository.deleteById(id);
     }
+<<<<<<< HEAD
 }
+=======
+}
+
+
+/*
+El DELETE tambien da 500 internal Server Error,
+Los dos POST de specs me fallaron con un  400 bad request,
+El delete de matenimiento da 500 Internal Server Err,
+Este en mantenimieto "POST http://localhost:8085/api/v1/canciones/2/equipos" funciona (200) pero la respuesta es muy larga de 3667 lineas.
+                     "PUT http://localhost:8085/api/v1/canciones/2/equipos/1" funciona (200) pero la respuesta es muy larga de 3667 lineas.
+                     "GET http://localhost:8085/api/v1/canciones/2/setup-completo" Funciona (200) pero la respuesta es muy larga de 3667 lineas.
+*/
+
+//yA NOOOO - oSCAR
+>>>>>>> mi-respaldo

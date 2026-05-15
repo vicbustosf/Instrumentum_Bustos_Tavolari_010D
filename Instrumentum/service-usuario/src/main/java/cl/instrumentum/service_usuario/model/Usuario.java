@@ -20,18 +20,22 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Usuario {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idUser;
 
+    //No puede haber dos usuarios con el mismo username
     @Column(unique = true)
     private String username;
 
     private String email;
 
+    // Valida que el rol sea uno de los valores permitidos
     @Pattern(regexp = "Musico|Tech")
     private String rol;
 
+    // Relación con Banda (muchos usuarios pueden pertenecer a una banda)
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_banda")
     private Banda banda;

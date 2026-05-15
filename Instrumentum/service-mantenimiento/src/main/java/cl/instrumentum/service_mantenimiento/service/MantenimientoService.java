@@ -65,7 +65,11 @@ public class MantenimientoService {
         return ultimo.get().getFecha().isBefore(LocalDate.now().minusMonths(6));
     }
  
+<<<<<<< HEAD
     // FIX: faltaba @Transactional. deleteByEquipoId() es una derived delete query
+=======
+    // faltaba @Transactional. deleteByEquipoId() es una consulta derivada
+>>>>>>> mi-respaldo
     // de Spring Data JPA y necesita transacción activa, sin ella lanza
     // TransactionRequiredException → 500 Internal Server Error.
     @Transactional

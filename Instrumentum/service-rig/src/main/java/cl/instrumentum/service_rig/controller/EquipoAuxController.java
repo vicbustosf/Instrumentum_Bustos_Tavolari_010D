@@ -17,7 +17,12 @@ public class EquipoAuxController {
     // FIX: antes devolvía Map<String, Boolean> {"asignado": true/false}
     // pero InventarioService lo consumía con bodyToMono(Boolean.class),
     // causando un 500. Se simplifica para devolver el boolean directamente.
+<<<<<<< HEAD
     @GetMapping("/en-cancion/{equipoId}")
+=======
+    
+    @GetMapping("/en-cancion/{equipoId}")   
+>>>>>>> mi-respaldo
     public boolean estaEnCancion(@PathVariable Long equipoId) {
         return rigService.equipoEstaEnAlgunaCancion(equipoId);
     }
