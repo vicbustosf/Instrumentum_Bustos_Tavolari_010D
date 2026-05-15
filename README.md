@@ -8,7 +8,7 @@ Instrumentum centraliza el inventario, el mantenimiento técnico y la configurac
 
 ## Colaboradores
 
-- Victoria Busts
+- Victoria Bustos
 - Oscar Tavolari
 
 ---
