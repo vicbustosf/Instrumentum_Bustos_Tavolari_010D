@@ -36,7 +36,18 @@ public class MantenimientoController {
         response.put("alerta", alerta);
         return ResponseEntity.ok(response);
     }
-
+    
+    @PutMapping("/{id}")
+    public ResponseEntity<Mantenimiento> actualizar(@PathVariable Long id, @RequestBody Mantenimiento datos) {
+        return mantenimientoService.buscarPorId(id)
+                .map(m -> {
+                    m.setFecha(datos.getFecha());
+                    m.setDescripcion(datos.getDescripcion());
+                    m.setCosto(datos.getCosto());
+                    return ResponseEntity.ok(mantenimientoService.registrarMantenimiento(m));
+                })
+                .orElse(ResponseEntity.notFound().build());
+}
     @DeleteMapping("/equipo/{equipoId}")
     public ResponseEntity<Void> eliminarPorEquipo(@PathVariable Long equipoId) {
         mantenimientoService.eliminarPorEquipo(equipoId);

@@ -21,6 +21,6 @@ public class Cancion {
     private Long bandaId;
     private Integer duracionSegundos;
 
-    @OneToMany(mappedBy = "cancion", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "cancion", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<EquipoCancion> equiposAsignados = new ArrayList<>();
 }

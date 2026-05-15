@@ -22,17 +22,25 @@ public class EquipoController {
         return ResponseEntity.status(HttpStatus.CREATED).body(nuevo);
     }
 
-    @GetMapping
-    public ResponseEntity<List<Equipo>> listarPorPropietario(@RequestParam Long propietarioId) {
+    @GetMapping("/todos")
+    public ResponseEntity<List<Equipo>> listarTodos() {
+        return ResponseEntity.ok(inventarioService.listarTodos());
+    }
+
+    @GetMapping("/propietario/{propietarioId}")
+    public ResponseEntity<List<Equipo>> listarPorPropietario(@PathVariable Long propietarioId) {
         return ResponseEntity.ok(inventarioService.listarEquiposPorPropietario(propietarioId));
     }
 
-    @GetMapping("/buscar")
+    @GetMapping("/buscar/{nombre}/{marca}/{categoria}")
     public ResponseEntity<List<Equipo>> buscar(
-            @RequestParam(required = false) String nombre,
-            @RequestParam(required = false) String marca,
-            @RequestParam(required = false) String categoria) {
-        return ResponseEntity.ok(inventarioService.buscarEquipos(nombre, marca, categoria));
+        @PathVariable String nombre,
+        @PathVariable String marca,
+        @PathVariable String categoria) {
+        String n = "_".equals(nombre) ? null : nombre;
+        String m = "_".equals(marca)  ? null : marca;
+        String c = "_".equals(categoria) ? null : categoria;
+        return ResponseEntity.ok(inventarioService.buscarEquipos(n, m, c));
     }
 
     @GetMapping("/{id}")

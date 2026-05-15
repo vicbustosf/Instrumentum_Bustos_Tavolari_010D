@@ -24,4 +24,21 @@ public class CategoriaController {
     public List<Categoria> listar() {
         return inventarioService.listarCategorias();
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Categoria> actualizar(@PathVariable Long id, @RequestBody Categoria datos) {
+        return inventarioService.obtenerCategoriaPorId(id)
+                .map(c -> {
+                    c.setNombre(datos.getNombre());
+                    return ResponseEntity.ok(inventarioService.guardarCategoria(c));
+                })
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Categoria> obtener(@PathVariable Long id) {
+        return inventarioService.obtenerCategoriaPorId(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
 }

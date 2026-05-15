@@ -12,6 +12,11 @@ spring:
           predicates:
             - Path=/api/v1/usuarios/**, /api/v1/bandas/**
 
+        - id: service-rig-equipos
+          uri: http://localhost:8085
+          predicates:
+            - Path=/api/v1/equipos/en-cancion/**
+
         - id: service-inventario
           uri: http://localhost:8082
           predicates:
@@ -30,4 +35,4 @@ spring:
         - id: service-rig
           uri: http://localhost:8085
           predicates:
-            - Path=/api/v1/canciones/**, /api/v1/equipos/en-cancion/**
+            - Path=/api/v1/canciones/**

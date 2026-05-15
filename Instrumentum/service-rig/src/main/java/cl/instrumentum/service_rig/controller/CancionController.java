@@ -27,6 +27,16 @@ public class CancionController {
         return rigService.listarCancionesPorBanda(bandaId);
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<Cancion> actualizar(@PathVariable Long id, @RequestBody Cancion datos) {
+        return rigService.buscarCancionPorId(id)
+                .map(c -> {
+                    c.setNombre(datos.getNombre());
+                    c.setDuracionSegundos(datos.getDuracionSegundos());
+                    return ResponseEntity.ok(rigService.actualizarCancion(c));
+                })
+                .orElse(ResponseEntity.notFound().build());
+    }
     @DeleteMapping("/{cancionId}")
     public ResponseEntity<Void> eliminarCancion(@PathVariable Long cancionId) {
         rigService.eliminarCancion(cancionId);

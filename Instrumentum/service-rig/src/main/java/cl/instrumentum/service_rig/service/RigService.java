@@ -2,6 +2,8 @@ package cl.instrumentum.service_rig.service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -27,9 +29,17 @@ public class RigService {
     @PostConstruct
     public void cargarDatosPrueba() {
         if (cancionRepository.count() > 0) return;
-        Cancion cancion = new Cancion(null, "Mi Primera Cancion", 1L, 180, new java.util.ArrayList<>());
-        cancion = cancionRepository.save(cancion);
-        equipoCancionRepository.save(new EquipoCancion(null, cancion, 1L, 1, "Volumen 7, Tonos al maximo"));
+
+        // Seed original
+        Cancion cancion1 = new Cancion(null, "Mi Primera Cancion", 1L, 180, new java.util.ArrayList<>());
+        cancion1 = cancionRepository.save(cancion1);
+        equipoCancionRepository.save(new EquipoCancion(null, cancion1, 1L, 1, "Volumen 7, Tonos al maximo"));
+
+        // Seed nuevo
+        Cancion cancion2 = new Cancion(null, "Riff del Verano", 1L, 195, new java.util.ArrayList<>());
+        cancion2 = cancionRepository.save(cancion2);
+        equipoCancionRepository.save(new EquipoCancion(null, cancion2, 1L, 1, "Volumen 7, Gain 5, Treble 8"));
+        equipoCancionRepository.save(new EquipoCancion(null, cancion2, 4L, 2, "Volumen 8, Graves al maximo"));
     }
 
     private void validarBanda(Long bandaId) {
@@ -58,6 +68,14 @@ public class RigService {
 
     public List<Cancion> listarCancionesPorBanda(Long bandaId) {
         return cancionRepository.findByBandaId(bandaId);
+    }
+
+    public Optional<Cancion> buscarCancionPorId(Long id) {
+        return cancionRepository.findById(id);
+    }
+
+    public Cancion actualizarCancion(Cancion cancion) {
+        return cancionRepository.save(cancion);
     }
 
     @Transactional

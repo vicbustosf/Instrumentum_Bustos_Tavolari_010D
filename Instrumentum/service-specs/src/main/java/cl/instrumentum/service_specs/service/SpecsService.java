@@ -25,10 +25,17 @@ public class SpecsService {
     @PostConstruct
     public void cargarDatosPrueba() {
         if (instrumentoRepository.count() > 0) return;
+
+        // Seeds originales
         instrumentoRepository.save(new EspecificacionInstrumento(1L, "Aliso", "HSS", "010"));
         instrumentoRepository.save(new EspecificacionInstrumento(2L, "Caoba", "HH", "011"));
         electronicaRepository.save(new EspecificacionElectronica(3L, "9V", 15.0, "Distortion"));
+
+        // Seeds nuevos
+        instrumentoRepository.save(new EspecificacionInstrumento(4L, "Aliso", "PJ", "045"));
+        electronicaRepository.save(new EspecificacionElectronica(5L, "220V", 100.0, "Valvular"));
     }
+
 
     private void validarEquipo(Long equipoId) {
         webClientBuilder.build()
@@ -53,7 +60,9 @@ public class SpecsService {
 
     public Object obtenerEspecificacionPorEquipo(Long equipoId) {
         Optional<EspecificacionInstrumento> inst = instrumentoRepository.findById(equipoId);
-        if (inst.isPresent()) return inst.get();
+        if (inst.isPresent()){ 
+            return inst.get();
+        }
         Optional<EspecificacionElectronica> elec = electronicaRepository.findById(equipoId);
         return elec.orElse(null);
     }
@@ -61,5 +70,15 @@ public class SpecsService {
     public void eliminarPorEquipoId(Long equipoId) {
         instrumentoRepository.deleteById(equipoId);
         electronicaRepository.deleteById(equipoId);
+    }
+
+    
+
+    public Optional<EspecificacionInstrumento> obtenerInstrumentoPorId(Long equipoId) {
+        return instrumentoRepository.findById(equipoId);
+    }
+
+    public Optional<EspecificacionElectronica> obtenerElectronicaPorId(Long equipoId) {
+        return electronicaRepository.findById(equipoId);
     }
 }
