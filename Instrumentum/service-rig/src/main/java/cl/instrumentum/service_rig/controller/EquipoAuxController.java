@@ -7,6 +7,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import cl.instrumentum.service_rig.service.RigService;
  
+
+//Es auxiliar para el InventarioService, 
+// para consultar si un equipo está asignado a alguna canción, 
+// sin necesidad de traer toda la info del rig.
+
 @RestController
 @RequestMapping("/api/v1/equipos")
 public class EquipoAuxController {

@@ -20,6 +20,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Usuario {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idUser;
@@ -29,6 +30,7 @@ public class Usuario {
 
     private String email;
 
+    // El rol debe ser "Musico" o "Tech"
     @Pattern(regexp = "Musico|Tech")
     private String rol;
 

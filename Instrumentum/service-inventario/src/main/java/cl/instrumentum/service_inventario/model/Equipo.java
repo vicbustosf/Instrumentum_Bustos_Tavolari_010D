@@ -14,14 +14,18 @@ public class Equipo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String nombre;
     private String modelo;
+    
     @ManyToOne
     @JoinColumn(name = "marca_id")
     private Marca marca;
+    
     @ManyToOne
     @JoinColumn(name = "categoria_id")
     private Categoria categoria;
+    
     private Long propietarioId;
     private String tipoPropietario; // "USUARIO" o "BANDA"
     private String tipoEquipo;      // "INSTRUMENTO" o "ELECTRONICO"

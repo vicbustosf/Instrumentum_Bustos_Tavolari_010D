@@ -7,6 +7,7 @@ import cl.instrumentum.service_mantenimiento.model.Mantenimiento;
 
 public interface MantenimientoRepository extends JpaRepository<Mantenimiento, Long> {
 
+    //METODOS PROPIOS
     List<Mantenimiento> findByEquipoIdOrderByFechaDesc(Long equipoId);
 
     Optional<Mantenimiento> findTopByEquipoIdOrderByFechaDesc(Long equipoId);

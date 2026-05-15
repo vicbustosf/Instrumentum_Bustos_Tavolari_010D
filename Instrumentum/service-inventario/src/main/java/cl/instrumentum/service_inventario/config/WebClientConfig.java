@@ -10,4 +10,6 @@ public class WebClientConfig {
     public WebClient.Builder webClientBuilder() {
         return WebClient.builder();
     }
+    //builder arma objeto WebClient, que es el 
+    // cliente HTTP reactivo de Spring, para hacer llamadas a otros servicios.
 }

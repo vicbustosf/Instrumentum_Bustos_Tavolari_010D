@@ -18,6 +18,10 @@ public class MantenimientoController {
     @Autowired
     private MantenimientoService mantenimientoService;
 
+
+    //Este post se encarga de registrar un nuevo mantenimiento, 
+    // recibe un objeto Mantenimiento en el cuerpo de la solicitud, lo valida 
+    // y lo guarda utilizando el servicio. Devuelve el mantenimiento guardado con un estado HTTP 201 (CREATED).
     @PostMapping
     public ResponseEntity<Mantenimiento> registrar(@Valid @RequestBody Mantenimiento mantenimiento) {
         Mantenimiento guardado = mantenimientoService.registrarMantenimiento(mantenimiento);
@@ -29,6 +33,8 @@ public class MantenimientoController {
         return mantenimientoService.listarPorEquipo(equipoId);
     }
 
+
+    //Si el equipo requiere mantenimiento, devuelve un mapa con la clave "alerta" y el valor true.
     @GetMapping("/alerta/{equipoId}")
     public ResponseEntity<Map<String, Boolean>> alertaMantenimiento(@PathVariable Long equipoId) {
         boolean alerta = mantenimientoService.requiereMantenimiento(equipoId);
@@ -47,7 +53,8 @@ public class MantenimientoController {
                     return ResponseEntity.ok(mantenimientoService.registrarMantenimiento(m));
                 })
                 .orElse(ResponseEntity.notFound().build());
-}
+    }
+
     @DeleteMapping("/equipo/{equipoId}")
     public ResponseEntity<Void> eliminarPorEquipo(@PathVariable Long equipoId) {
         mantenimientoService.eliminarPorEquipo(equipoId);

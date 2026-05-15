@@ -20,6 +20,11 @@ public class MarcaController {
         return ResponseEntity.ok(inventarioService.guardarMarca(marca));
     }
     
+    @GetMapping
+    public List<Marca> listar() {
+        return inventarioService.listarMarcas();
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<Marca> actualizar(@PathVariable Long id, @RequestBody Marca datos) {
         return inventarioService.obtenerMarcaPorId(id)
@@ -30,10 +35,7 @@ public class MarcaController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @GetMapping
-    public List<Marca> listar() {
-        return inventarioService.listarMarcas();
-    }
+    
 
     @GetMapping("/{id}")
     public ResponseEntity<Marca> obtener(@PathVariable Long id) {
@@ -41,4 +43,13 @@ public class MarcaController {
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
+
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> eliminar(@PathVariable Long id) {
+        inventarioService.eliminarMarca(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    
 }

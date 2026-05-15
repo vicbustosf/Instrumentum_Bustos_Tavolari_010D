@@ -12,9 +12,11 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Banda {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idBanda;
+    
     private String nombre;
     private LocalDate fechaRegistro;
 }

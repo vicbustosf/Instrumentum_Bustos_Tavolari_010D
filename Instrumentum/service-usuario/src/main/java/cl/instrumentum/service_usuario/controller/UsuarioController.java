@@ -35,12 +35,12 @@ public class UsuarioController {
     @PutMapping("/{id}")
     public ResponseEntity<Usuario> actualizar(@PathVariable Long id, @RequestBody Usuario datos) {
         return usuarioService.buscarUsuarioPorId(id)
-                .map(u -> {
-                    u.setUsername(datos.getUsername());
-                    u.setEmail(datos.getEmail());
-                    u.setRol(datos.getRol());
-                    u.setBanda(datos.getBanda());
-                    return ResponseEntity.ok(usuarioService.guardarUsuario(u));
+                .map(U -> {
+                    U.setUsername(datos.getUsername());
+                    U.setEmail(datos.getEmail());
+                    U.setRol(datos.getRol());
+                    U.setBanda(datos.getBanda());
+                    return ResponseEntity.ok(usuarioService.guardarUsuario(U));
                 })
                 .orElse(ResponseEntity.notFound().build());
     }

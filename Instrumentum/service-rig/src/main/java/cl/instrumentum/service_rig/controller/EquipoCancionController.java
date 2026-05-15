@@ -16,6 +16,9 @@ public class EquipoCancionController {
     @Autowired
     private RigService rigService;
 
+
+    //La funcion de este post es asignar
+    //  un equipo a una canción, con su posición y seteo de perillas.
     @PostMapping("/{cancionId}/equipos")
     public ResponseEntity<EquipoCancion> asignarEquipo(
             @PathVariable Long cancionId,

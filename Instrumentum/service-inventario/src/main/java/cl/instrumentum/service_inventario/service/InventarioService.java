@@ -27,24 +27,21 @@ public class InventarioService {
     @PostConstruct
     public void cargarDatosPrueba() {
         if (marcaRepository.count() > 0) return;
-
-        Marca fender = marcaRepository.save(new Marca(null, "Fender"));
-        Marca gibson = marcaRepository.save(new Marca(null, "Gibson"));
-        Marca boss = marcaRepository.save(new Marca(null, "Boss"));
+ 
+        Marca fender   = marcaRepository.save(new Marca(null, "Fender"));
+        Marca gibson   = marcaRepository.save(new Marca(null, "Gibson"));
+        Marca boss     = marcaRepository.save(new Marca(null, "Boss"));
         Marca marshall = marcaRepository.save(new Marca(null, "Marshall"));
-
-        Categoria guitarra = categoriaRepository.save(new Categoria(null, "Guitarra"));
-        Categoria pedal = categoriaRepository.save(new Categoria(null, "Pedal"));
+ 
+        Categoria guitarra     = categoriaRepository.save(new Categoria(null, "Guitarra"));
+        Categoria pedal        = categoriaRepository.save(new Categoria(null, "Pedal"));
         Categoria amplificador = categoriaRepository.save(new Categoria(null, "Amplificador"));
-
-        // Equipos seed originales
-        equipoRepository.save(new Equipo(null, "Stratocaster", "USA", fender, guitarra, 1L, "USUARIO", "INSTRUMENTO"));
-        equipoRepository.save(new Equipo(null, "Les Paul", "Standard", gibson, guitarra, 1L, "USUARIO", "INSTRUMENTO"));
-        equipoRepository.save(new Equipo(null, "DS-1", "Distortion", boss, pedal, 2L, "BANDA", "ELECTRONICO"));
-
-        // Equipos nuevos
-        equipoRepository.save(new Equipo(null, "Precision Bass", "Player Series", gibson, guitarra, 2L, "USUARIO", "INSTRUMENTO"));
-        equipoRepository.save(new Equipo(null, "JCM800", "2203", marshall, amplificador, 1L, "BANDA", "ELECTRONICO"));
+ 
+        equipoRepository.save(new Equipo(null, "Stratocaster",   "USA",           fender,   guitarra,     1L, "USUARIO", "INSTRUMENTO"));
+        equipoRepository.save(new Equipo(null, "Les Paul",       "Standard",      gibson,   guitarra,     1L, "USUARIO", "INSTRUMENTO"));
+        equipoRepository.save(new Equipo(null, "DS-1",           "Distortion",    boss,     pedal,        2L, "BANDA",   "ELECTRONICO"));
+        equipoRepository.save(new Equipo(null, "Precision Bass", "Player Series", gibson,   guitarra,     2L, "USUARIO", "INSTRUMENTO"));
+        equipoRepository.save(new Equipo(null, "JCM800",         "2203",          marshall, amplificador, 1L, "BANDA",   "ELECTRONICO"));
     }
  
     public Marca guardarMarca(Marca marca) {
@@ -54,7 +51,7 @@ public class InventarioService {
     public List<Marca> listarMarcas() {
         return marcaRepository.findAll();
     }
-
+ 
     public List<Equipo> listarTodos() {
         return equipoRepository.findAll();
     }
@@ -66,7 +63,7 @@ public class InventarioService {
     public List<Categoria> listarCategorias() {
         return categoriaRepository.findAll();
     }
-    
+ 
     private void validarPropietario(Long propietarioId, String tipoPropietario) {
         try {
             String url;
@@ -90,21 +87,23 @@ public class InventarioService {
             throw new RuntimeException();
         }
     }
-
+ 
     public Optional<Marca> obtenerMarcaPorId(Long id) {
         return marcaRepository.findById(id);
     }
-
+ 
     public Optional<Categoria> obtenerCategoriaPorId(Long id) {
         return categoriaRepository.findById(id);
     }
  
     public Equipo guardarEquipo(Equipo equipo) {
-        if (equipo.getId() != null && equipoRepository.findById(equipo.getId()).isEmpty()) {
+        if (equipo.getId() != null && equipoRepository.findById(equipo.getId()).isEmpty()) 
+            {
             throw new RuntimeException();
         }
         Optional<Equipo> existing = equipoRepository.findByNombre(equipo.getNombre());
-        if (existing.isPresent() && !existing.get().getId().equals(equipo.getId())) {
+        if (existing.isPresent() && !existing.get().getId().equals(equipo.getId())) 
+            {
             throw new RuntimeException();
         }
         validarPropietario(equipo.getPropietarioId(), equipo.getTipoPropietario());
@@ -122,11 +121,18 @@ public class InventarioService {
     public Optional<Equipo> obtenerEquipoPorId(Long id) {
         return equipoRepository.findById(id);
     }
- 
+    
+    public void eliminarMarca(Long id) {
+        marcaRepository.deleteById(id);
+    }
+
+    public void eliminarCategoria(Long id) {
+        categoriaRepository.deleteById(id);
+    }
+
     public void eliminarEquipo(Long id) {
         equipoRepository.findById(id).orElseThrow(RuntimeException::new);
  
-        // FIX: ahora el endpoint devuelve boolean directo, bodyToMono(Boolean.class) funciona correctamente
         Boolean enCancion = webClientBuilder.build()
                 .get()
                 .uri("http://localhost:8085/api/v1/equipos/en-cancion/" + id)
@@ -138,10 +144,11 @@ public class InventarioService {
             throw new RuntimeException();
         }
  
+        // URL corregida de /specs/ a /especs/ para que coincida con EspecsController
         try {
             webClientBuilder.build()
                     .delete()
-                    .uri("http://localhost:8083/api/v1/specs/equipo/" + id)
+                    .uri("http://localhost:8083/api/v1/especs/equipo/" + id)
                     .retrieve()
                     .toBodilessEntity()
                     .block();

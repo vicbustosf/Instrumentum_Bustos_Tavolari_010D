@@ -16,6 +16,8 @@ public class EspecsController {
     @Autowired
     private SpecsService specsService;
 
+    //Pide el equipoId en la URL porque cada especificación está asociada a un
+    //  equipo específico, y así se asegura que se crea la especificación para el equipo correcto. 
     @PostMapping("/instrumento/{equipoId}")
     public ResponseEntity<EspecificacionInstrumento> crearInstrumento(
             @PathVariable Long equipoId,
@@ -23,6 +25,8 @@ public class EspecsController {
         EspecificacionInstrumento guardada = specsService.guardarInstrumento(equipoId, espec);
         return ResponseEntity.status(HttpStatus.CREATED).body(guardada);
     }
+
+    //Lo mismo de arriba
 
     @PostMapping("/electronica/{equipoId}")
     public ResponseEntity<EspecificacionElectronica> crearElectronica(
@@ -60,6 +64,7 @@ public class EspecsController {
                 .orElse(ResponseEntity.notFound().build());
     }
     
+    // Este método es para validar que el equipo existe antes de crear o actualizar una especificación.
     @GetMapping("/equipo/{equipoId}")
     public ResponseEntity<?> obtenerPorEquipo(@PathVariable Long equipoId) {
         Object espec = specsService.obtenerEspecificacionPorEquipo(equipoId);

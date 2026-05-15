@@ -15,8 +15,8 @@ public class EspecificacionInstrumento {
  
     @Id
     @Column(name = "id_equipo")
-    // FIX: se quitó @NotNull. El id viene del @PathVariable del controlador,
-    // no del body. Con @NotNull el validador rechazaba el request con 400.
+
+    //LO mismo que en electronica
     private Long idEquipo;
  
     @NotBlank

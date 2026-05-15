@@ -26,12 +26,12 @@ public class SpecsService {
     public void cargarDatosPrueba() {
         if (instrumentoRepository.count() > 0) return;
 
-        // Seeds originales
+        
         instrumentoRepository.save(new EspecificacionInstrumento(1L, "Aliso", "HSS", "010"));
         instrumentoRepository.save(new EspecificacionInstrumento(2L, "Caoba", "HH", "011"));
         electronicaRepository.save(new EspecificacionElectronica(3L, "9V", 15.0, "Distortion"));
 
-        // Seeds nuevos
+     
         instrumentoRepository.save(new EspecificacionInstrumento(4L, "Aliso", "PJ", "045"));
         electronicaRepository.save(new EspecificacionElectronica(5L, "220V", 100.0, "Valvular"));
     }

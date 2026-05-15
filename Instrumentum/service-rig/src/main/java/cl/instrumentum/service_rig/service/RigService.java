@@ -3,7 +3,6 @@ package cl.instrumentum.service_rig.service;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -30,12 +29,12 @@ public class RigService {
     public void cargarDatosPrueba() {
         if (cancionRepository.count() > 0) return;
 
-        // Seed original
+        
         Cancion cancion1 = new Cancion(null, "Mi Primera Cancion", 1L, 180, new java.util.ArrayList<>());
         cancion1 = cancionRepository.save(cancion1);
         equipoCancionRepository.save(new EquipoCancion(null, cancion1, 1L, 1, "Volumen 7, Tonos al maximo"));
 
-        // Seed nuevo
+       
         Cancion cancion2 = new Cancion(null, "Riff del Verano", 1L, 195, new java.util.ArrayList<>());
         cancion2 = cancionRepository.save(cancion2);
         equipoCancionRepository.save(new EquipoCancion(null, cancion2, 1L, 1, "Volumen 7, Gain 5, Treble 8"));
@@ -61,7 +60,11 @@ public class RigService {
     }
 
     public Cancion crearCancion(Cancion cancion) {
-        if (cancion.getBandaId() == null) throw new RuntimeException();
+        if (cancion.getBandaId() == null)
+        {
+            throw new RuntimeException();
+        }
+
         validarBanda(cancion.getBandaId());
         return cancionRepository.save(cancion);
     }
@@ -78,6 +81,8 @@ public class RigService {
         return cancionRepository.save(cancion);
     }
 
+    // El transactional sirve para que si algo falla en el proceso de eliminación, 
+    // se revierta toda la operación y no quede nada a medias
     @Transactional
     public void eliminarCancion(Long cancionId) {
         Cancion cancion = cancionRepository.findById(cancionId).orElseThrow(RuntimeException::new);
@@ -96,6 +101,7 @@ public class RigService {
         return equipoCancionRepository.save(ec);
     }
 
+    
     @Transactional
     public EquipoCancion actualizarEquipo(Long cancionId, Long equipoId, Integer posicion, String seteoPerillas) {
         Cancion cancion = cancionRepository.findById(cancionId).orElseThrow(RuntimeException::new);

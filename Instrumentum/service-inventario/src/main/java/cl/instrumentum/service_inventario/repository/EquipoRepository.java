@@ -22,4 +22,6 @@ public interface EquipoRepository extends JpaRepository<Equipo, Long> {
     List<Equipo> buscarConFiltrosExactos(@Param("nombre") String nombre,
                                           @Param("marca") String marca,
                                           @Param("categoria") String categoria);
+
+    //Metodos propios
 }
