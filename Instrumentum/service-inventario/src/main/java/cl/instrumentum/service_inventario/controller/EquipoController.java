@@ -23,16 +23,31 @@ public class EquipoController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Equipo>> listarPorPropietario(@RequestParam Long propietarioId) {
+    public ResponseEntity<List<Equipo>> listarTodos() {
+        return ResponseEntity.ok(inventarioService.listarTodos());
+    }
+
+    @GetMapping("/propietario/{propietarioId}")
+    public ResponseEntity<List<Equipo>> listarPorPropietario(@PathVariable Long propietarioId) {
         return ResponseEntity.ok(inventarioService.listarEquiposPorPropietario(propietarioId));
     }
 
-    @GetMapping("/buscar")
+    @GetMapping("/buscar/{nombre}/{marca}/{categoria}")
     public ResponseEntity<List<Equipo>> buscar(
-            @RequestParam(required = false) String nombre,
-            @RequestParam(required = false) String marca,
-            @RequestParam(required = false) String categoria) {
-        return ResponseEntity.ok(inventarioService.buscarEquipos(nombre, marca, categoria));
+        @PathVariable String nombre,
+        @PathVariable String marca,
+        @PathVariable String categoria) {
+        String n = "_".equals(nombre) ? null : nombre; 
+        String m = "_".equals(marca)  ? null : marca;
+        String c = "_".equals(categoria) ? null : categoria;
+        return ResponseEntity.ok(inventarioService.buscarEquipos(n, m, c));
+//El simbolo "?" significa que el parámetro es opcional,
+//  pero como estamos usando @PathVariable, no podemos omitirlo
+
+
+        // Se usa "_" como comodín para indicar que no se quiere filtrar por ese campo,
+        // ya que no se pueden usar query params con @PathVariable. 
+        // Esto permite buscar por cualquier combinación de campos.
     }
 
     @GetMapping("/{id}")

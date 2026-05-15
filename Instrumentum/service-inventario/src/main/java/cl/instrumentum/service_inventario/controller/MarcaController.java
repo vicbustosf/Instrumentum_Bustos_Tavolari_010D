@@ -19,9 +19,26 @@ public class MarcaController {
     public ResponseEntity<Marca> crear(@Valid @RequestBody Marca marca) {
         return ResponseEntity.ok(inventarioService.guardarMarca(marca));
     }
+    
+    @PutMapping("/{id}")
+    public ResponseEntity<Marca> actualizar(@PathVariable Long id, @RequestBody Marca datos) {
+        return inventarioService.obtenerMarcaPorId(id)
+                .map(m -> {
+                    m.setNombre(datos.getNombre());
+                    return ResponseEntity.ok(inventarioService.guardarMarca(m));
+                })
+                .orElse(ResponseEntity.notFound().build());
+    }
 
     @GetMapping
     public List<Marca> listar() {
         return inventarioService.listarMarcas();
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Marca> obtener(@PathVariable Long id) {
+        return inventarioService.obtenerMarcaPorId(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 }

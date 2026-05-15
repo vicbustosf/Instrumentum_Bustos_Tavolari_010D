@@ -27,6 +27,17 @@ public class BandaController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<Banda> actualizar(@PathVariable Long id, @RequestBody Banda datos) {
+        return usuarioService.buscarBandaPorId(id)
+                .map(b -> {
+                    b.setNombre(datos.getNombre());
+                    b.setFechaRegistro(datos.getFechaRegistro());
+                    return ResponseEntity.ok(usuarioService.guardarBanda(b));
+                })
+                .orElse(ResponseEntity.notFound().build());
+    }
+
     @PostMapping
     public ResponseEntity<Banda> crear(@Valid @RequestBody Banda banda) {
         return ResponseEntity.ok(usuarioService.guardarBanda(banda));

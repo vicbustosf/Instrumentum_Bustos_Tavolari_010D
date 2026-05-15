@@ -18,8 +18,10 @@ public class MantenimientoController {
     @Autowired
     private MantenimientoService mantenimientoService;
 
-    @PostMapping//Registrar nuevo mantenimiento, se espera un JSON con los datos del mantenimiento 
-    //              pero debe existir el equipo al que se le asigna.
+
+    //Registrar nuevo mantenimiento, se espera un JSON con los datos del mantenimiento 
+    //     pero debe existir el equipo al que se le asigna.
+    @PostMapping
     public ResponseEntity<Mantenimiento> registrar(@Valid @RequestBody Mantenimiento mantenimiento) {
         Mantenimiento guardado = mantenimientoService.registrarMantenimiento(mantenimiento);
         return ResponseEntity.status(HttpStatus.CREATED).body(guardado);
@@ -31,6 +33,7 @@ public class MantenimientoController {
         return mantenimientoService.listarPorEquipo(equipoId);
     }
 
+
     // Endpoint para verificar si un equipo requiere mantenimiento, 
     // devuelve un JSON con {"alerta": true/false}, si es true, el equipo requiere 
     // mantenimiento, si es false, no lo requiere. 
@@ -41,7 +44,18 @@ public class MantenimientoController {
         response.put("alerta", alerta);
         return ResponseEntity.ok(response);
     }
-
+    
+    @PutMapping("/{id}")
+    public ResponseEntity<Mantenimiento> actualizar(@PathVariable Long id, @RequestBody Mantenimiento datos) {
+        return mantenimientoService.buscarPorId(id)
+                .map(m -> {
+                    m.setFecha(datos.getFecha());
+                    m.setDescripcion(datos.getDescripcion());
+                    m.setCosto(datos.getCosto());
+                    return ResponseEntity.ok(mantenimientoService.registrarMantenimiento(m));
+                })
+                .orElse(ResponseEntity.notFound().build());
+}
     @DeleteMapping("/equipo/{equipoId}")
     public ResponseEntity<Void> eliminarPorEquipo(@PathVariable Long equipoId) {
         mantenimientoService.eliminarPorEquipo(equipoId);

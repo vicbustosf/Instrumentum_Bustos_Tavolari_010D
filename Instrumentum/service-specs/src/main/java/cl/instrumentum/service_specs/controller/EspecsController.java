@@ -32,7 +32,34 @@ public class EspecsController {
         return ResponseEntity.status(HttpStatus.CREATED).body(guardada);
     }
 
-     
+    @PutMapping("/instrumento/{equipoId}")
+    public ResponseEntity<EspecificacionInstrumento> actualizarInstrumento(
+            @PathVariable Long equipoId,
+            @Valid @RequestBody EspecificacionInstrumento datos) {
+        return specsService.obtenerInstrumentoPorId(equipoId)
+                .map(e -> {
+                    e.setTipoMadera(datos.getTipoMadera());
+                    e.setConfigPastillas(datos.getConfigPastillas());
+                    e.setCalibreCuerdas(datos.getCalibreCuerdas());
+                    return ResponseEntity.ok(specsService.guardarInstrumento(equipoId, e));
+                })
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @PutMapping("/electronica/{equipoId}")
+    public ResponseEntity<EspecificacionElectronica> actualizarElectronica(
+            @PathVariable Long equipoId,
+            @Valid @RequestBody EspecificacionElectronica datos) {
+        return specsService.obtenerElectronicaPorId(equipoId)
+                .map(e -> {
+                    e.setVoltaje(datos.getVoltaje());
+                    e.setConsumo(datos.getConsumo());
+                    e.setTipoCircuito(datos.getTipoCircuito());
+                    return ResponseEntity.ok(specsService.guardarElectronica(equipoId, e));
+                })
+                .orElse(ResponseEntity.notFound().build());
+    }
+    
     @GetMapping("/equipo/{equipoId}")
     public ResponseEntity<?> obtenerPorEquipo(@PathVariable Long equipoId) {
         Object espec = specsService.obtenerEspecificacionPorEquipo(equipoId);

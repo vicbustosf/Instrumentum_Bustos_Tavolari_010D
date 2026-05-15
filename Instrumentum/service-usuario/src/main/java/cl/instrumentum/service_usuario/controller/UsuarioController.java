@@ -32,6 +32,19 @@ public class UsuarioController {
         return ResponseEntity.ok(usuarioService.guardarUsuario(usuario));
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<Usuario> actualizar(@PathVariable Long id, @RequestBody Usuario datos) {
+        return usuarioService.buscarUsuarioPorId(id).map(u -> //-> significa "si encuentra el usuario, haz esto"
+                { 
+                    u.setUsername(datos.getUsername());
+                    u.setEmail(datos.getEmail());
+                    u.setRol(datos.getRol());
+                    u.setBanda(datos.getBanda());
+                    return ResponseEntity.ok(usuarioService.guardarUsuario(u));
+                })
+                .orElse(ResponseEntity.notFound().build());
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminar(@PathVariable Long id) {
         usuarioService.eliminarUsuario(id);
