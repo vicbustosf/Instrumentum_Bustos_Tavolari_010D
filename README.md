@@ -186,7 +186,7 @@ Base URL: `http://localhost:8181/api/v1`
 
 El siguiente diagrama representa el modelo de datos en Tercera Forma Normal (3FN):
 
-![Modelo Entidad-Relación — Instrumentum](images/MER_Instrumentum_3FN_v2.drawio.png)
+![Modelo Entidad-Relación — Instrumentum](images/MER_Instrumentum_3FN_v3.jpg)
 
 ### Descripción de Entidades Principales
 
