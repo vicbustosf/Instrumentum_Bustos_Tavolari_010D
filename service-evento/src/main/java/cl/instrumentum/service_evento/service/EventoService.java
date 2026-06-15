@@ -5,7 +5,6 @@ import cl.instrumentum.service_evento.repository.EventoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -49,16 +48,5 @@ public class EventoService {
 
     public List<Evento> obtenerPorBanda(Long idBanda) {
         return eventoRepository.findByIdBanda(idBanda);
-    }
-
-    public List<Evento> obtenerPorBandaYFechas(Long idBanda,
-                                               LocalDate desde,
-                                               LocalDate hasta) {
-        return eventoRepository.findByIdBandaAndFechaBetween(idBanda, desde, hasta);
-    }
-
-    public List<Evento> obtenerPorBandaYCancion(Long idBanda,
-                                                String idCancion) {
-        return eventoRepository.findByIdBandaAndCancion(idBanda, idCancion);
     }
 }

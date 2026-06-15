@@ -36,3 +36,8 @@ spring:
           uri: http://localhost:8085
           predicates:
             - Path=/api/v1/canciones/**
+
+        - id: service-evento
+          uri: http://localhost:8086
+          predicates:
+            - Path=/api/v1/eventos/**

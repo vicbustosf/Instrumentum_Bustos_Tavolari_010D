@@ -3,12 +3,11 @@ package cl.instrumentum.service_evento.controller;
 import cl.instrumentum.service_evento.model.Evento;
 import cl.instrumentum.service_evento.service.EventoService;
 import jakarta.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -33,34 +32,62 @@ public class EventoController {
     }
 
     @PostMapping
-    public ResponseEntity<Evento> crearEvento(@Valid @RequestBody Evento evento) {
-        return ResponseEntity.ok(eventoService.guardarEvento(evento));
+    public ResponseEntity<Map<String, Object>> crearEvento(
+            @Valid @RequestBody Evento evento) {
+
+        Evento nuevo = eventoService.guardarEvento(evento);
+
+        return ResponseEntity.status(201)
+                .body(Map.of(
+                        "mensaje", "Evento creado correctamente.",
+                        "evento", nuevo
+                ));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Evento> actualizarEvento(
+    public ResponseEntity<Map<String, Object>> actualizarEvento(
             @PathVariable Long id,
             @Valid @RequestBody Evento evento) {
 
         Evento actualizado = eventoService.actualizarEvento(id, evento);
 
         if (actualizado == null) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(404)
+                    .body(Map.of(
+                            "mensaje",
+                            "No existe un evento con ID " + id
+                    ));
         }
 
-        return ResponseEntity.ok(actualizado);
+        return ResponseEntity.ok(
+                Map.of(
+                        "mensaje",
+                        "Evento actualizado correctamente.",
+                        "evento",
+                        actualizado
+                ));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> eliminarEvento(@PathVariable Long id) {
+    public ResponseEntity<Map<String, String>> eliminar(
+            @PathVariable Long id) {
 
-        if (eventoService.eliminarEvento(id)) {
-            return ResponseEntity.ok(
-                    Map.of("mensaje", "Evento eliminado correctamente","idEvento", id)
-            );
+        Optional<Evento> evento = eventoService.buscarPorId(id);
+
+        if (evento.isEmpty()) {
+            return ResponseEntity.status(404)
+                    .body(Map.of(
+                            "mensaje",
+                            "No existe un evento con ID " + id
+                    ));
         }
-        return ResponseEntity.status(404).body(Map.of(
-                        "mensaje", "No se encontró el evento con ID " + id
+
+        eventoService.eliminarEvento(id);
+
+        return ResponseEntity.ok(
+                Map.of(
+                        "mensaje",
+                        "Evento " + id + " eliminado correctamente."
                 ));
     }
 
@@ -72,22 +99,5 @@ public class EventoController {
                 eventoService.obtenerPorBanda(idBanda));
     }
 
-    @GetMapping("/banda/{idBanda}/fechas")
-    public ResponseEntity<List<Evento>> obtenerPorBandaYFechas(
-            @PathVariable Long idBanda,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate desde,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate hasta) {
-
-        return ResponseEntity.ok(
-                eventoService.obtenerPorBandaYFechas(idBanda, desde, hasta));
-    }
-
-    @GetMapping("/banda/{idBanda}/cancion/{idCancion}")
-    public ResponseEntity<List<Evento>> obtenerPorBandaYCancion(
-            @PathVariable Long idBanda,
-            @PathVariable String idCancion) {
-
-        return ResponseEntity.ok(
-                eventoService.obtenerPorBandaYCancion(idBanda, idCancion));
-    }
+    
 }
