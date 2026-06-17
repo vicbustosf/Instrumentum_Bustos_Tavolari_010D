@@ -13,7 +13,7 @@ import cl.instrumentum.service_rig.service.RigService;
 // sin necesidad de traer toda la info del rig.
 
 @RestController
-@RequestMapping("/api/v1/equipos")
+@RequestMapping("/api/v2/equipos")
 public class EquipoAuxController {
  
     @Autowired

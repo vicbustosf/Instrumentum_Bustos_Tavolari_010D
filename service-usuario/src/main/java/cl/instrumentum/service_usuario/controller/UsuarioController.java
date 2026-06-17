@@ -16,7 +16,7 @@ import cl.instrumentum.service_usuario.service.UsuarioService;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/api/v1/usuarios")
+@RequestMapping("/api/v2/usuarios")
 public class UsuarioController {
 
     @Autowired

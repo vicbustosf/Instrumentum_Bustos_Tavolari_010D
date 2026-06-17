@@ -46,27 +46,29 @@ public class InventarioService {
     }
  
     private void validarPropietario(Long propietarioId, String tipoPropietario) {
-        try {
-            String url;
-            if ("USUARIO".equals(tipoPropietario)) {
-                url = "http://localhost:8081/api/v1/usuarios/" + propietarioId;
-            } else if ("BANDA".equals(tipoPropietario)) {
-                url = "http://localhost:8081/api/v1/bandas/" + propietarioId;
-            } else {
-                throw new RuntimeException();
-            }
-            webClientBuilder.build()
-                .get()
-                .uri(url)
-                .retrieve()
-                .onStatus(status -> !status.is2xxSuccessful(), response -> {
-                    throw new RuntimeException();
-                })
-                .toBodilessEntity()
-                .block();
-        } catch (Exception e) {
-            throw new RuntimeException();
+
+        String path;
+
+        if ("USUARIO".equals(tipoPropietario)) {
+            path = "/api/v2/usuarios/{id}";
+        } else if ("BANDA".equals(tipoPropietario)) {
+            path = "/api/v2/bandas/{id}";
+        } else {
+            throw new RuntimeException("Tipo propietario inválido");
         }
+
+        webClientBuilder.build()
+            .get()
+            .uri(uriBuilder -> uriBuilder
+                .scheme("http")
+                .host("localhost")
+                .port(8081)
+                .path(path)
+                .build(propietarioId)
+            )
+            .retrieve()
+            .toBodilessEntity()
+            .block();
     }
  
     public Optional<Marca> obtenerMarcaPorId(Long id) {
@@ -119,7 +121,7 @@ public class InventarioService {
  
         Boolean enCancion = webClientBuilder.build()
                 .get()
-                .uri("http://localhost:8085/api/v1/equipos/en-cancion/" + id)
+                .uri("http://localhost:8085/api/v2/equipos/en-cancion/" + id)
                 .retrieve()
                 .bodyToMono(Boolean.class)
                 .block();
@@ -128,11 +130,11 @@ public class InventarioService {
             throw new RuntimeException();
         }
  
-        // URL corregida de /specs/ a /especs/ para que coincida con EspecsController
+        // URL corregida de specs a especs para que coincida con EspecsController
         try {
             webClientBuilder.build()
                     .delete()
-                    .uri("http://localhost:8083/api/v1/especs/equipo/" + id)
+                    .uri("http://localhost:8083/api/v2/especs/equipo/" + id)
                     .retrieve()
                     .toBodilessEntity()
                     .block();
@@ -141,7 +143,7 @@ public class InventarioService {
         try {
             webClientBuilder.build()
                     .delete()
-                    .uri("http://localhost:8084/api/v1/mantenimientos/equipo/" + id)
+                    .uri("http://localhost:8084/api/v2/mantenimientos/equipo/" + id)
                     .retrieve()
                     .toBodilessEntity()
                     .block();

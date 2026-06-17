@@ -13,7 +13,7 @@ import cl.instrumentum.service_rig.service.RigService;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/api/v1/canciones")
+@RequestMapping("/api/v2/canciones")
 public class CancionController {
 
     @Autowired

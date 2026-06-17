@@ -13,7 +13,7 @@ import cl.instrumentum.service_specs.service.SpecsService;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/api/v1/especs")
+@RequestMapping("/api/v2/especs")
 public class EspecsController {
 
     @Autowired

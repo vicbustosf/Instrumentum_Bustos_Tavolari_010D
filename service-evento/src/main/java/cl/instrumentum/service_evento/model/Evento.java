@@ -17,17 +17,19 @@ public class Evento {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @NotNull(message = "El id del evento es obligatorio")
     private Long idEvento;
 
-    @NotNull
+    @NotNull(message = "El id de la banda es obligatorio")
     private Long idBanda;
 
-    @NotBlank
+    @NotBlank(message = "El nombre del evento es obligatorio")
     private String nombre;
 
-    @NotNull
+    @NotNull(message = "La fecha del evento no puede quedar en blanco")
     private LocalDate fecha;
 
     // IDs de canciones separados por coma, ej: "1,4,7"
+    @NotBlank(message = "Deben especificarse las id de las canciones para el evento")
     private String canciones;
 }

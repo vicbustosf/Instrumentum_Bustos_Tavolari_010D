@@ -25,7 +25,7 @@ public class EventoService {
     private void validarBanda(Long idBanda) {
         webClientBuilder.build()
                 .get()
-                .uri("http://localhost:8081/api/v1/bandas/" + idBanda)
+                .uri("http://localhost:8081/api/v2/bandas/" + idBanda) 
                 .retrieve()
                 .toBodilessEntity()
                 .block();

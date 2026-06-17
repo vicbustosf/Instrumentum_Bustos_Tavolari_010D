@@ -25,26 +25,11 @@ public class RigService {
     @Autowired
     private WebClient.Builder webClientBuilder;
 
-    @PostConstruct
-    public void cargarDatosPrueba() {
-        if (cancionRepository.count() > 0) return;
-
-        
-        Cancion cancion1 = new Cancion(null, "Mi Primera Cancion", 1L, 180, new java.util.ArrayList<>());
-        cancion1 = cancionRepository.save(cancion1);
-        equipoCancionRepository.save(new EquipoCancion(null, cancion1, 1L, 1, "Volumen 7, Tonos al maximo"));
-
-       
-        Cancion cancion2 = new Cancion(null, "Riff del Verano", 1L, 195, new java.util.ArrayList<>());
-        cancion2 = cancionRepository.save(cancion2);
-        equipoCancionRepository.save(new EquipoCancion(null, cancion2, 1L, 1, "Volumen 7, Gain 5, Treble 8"));
-        equipoCancionRepository.save(new EquipoCancion(null, cancion2, 4L, 2, "Volumen 8, Graves al maximo"));
-    }
 
     private void validarBanda(Long bandaId) {
         webClientBuilder.build()
                 .get()
-                .uri("http://localhost:8081/api/v1/bandas/" + bandaId)
+                .uri("http://localhost:8081/api/v2/bandas/" + bandaId)
                 .retrieve()
                 .toBodilessEntity()
                 .block();
@@ -53,7 +38,7 @@ public class RigService {
     private void validarEquipo(Long equipoId) {
         webClientBuilder.build()
                 .get()
-                .uri("http://localhost:8082/api/v1/equipos/" + equipoId)
+                .uri("http://localhost:8082/api/v2/equipos/" + equipoId)
                 .retrieve()
                 .toBodilessEntity()
                 .block();

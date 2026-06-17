@@ -12,7 +12,7 @@ import cl.instrumentum.service_mantenimiento.service.MantenimientoService;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/api/v1/mantenimientos")
+@RequestMapping("/api/v2/mantenimientos")
 public class MantenimientoController {
 
     @Autowired

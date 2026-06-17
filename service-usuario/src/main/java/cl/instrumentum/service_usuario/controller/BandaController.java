@@ -16,7 +16,7 @@ import cl.instrumentum.service_usuario.service.UsuarioService;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/api/v1/bandas")
+@RequestMapping("/api/v2/bandas")
 public class BandaController {
 
     @Autowired
@@ -91,4 +91,8 @@ public class BandaController {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(Map.of("mensaje", "Error de validación: " + errores));
     }
+    //este metodo captura cualquier excepción no manejada y devuelve un mensaje genérico, 
+    // evitando que el cliente reciba errores HTML o stack traces. 
+    // El otro método captura específicamente errores de validación de campos (como @NotBlank) 
+    // y devuelve un mensaje detallado con los campos que fallaron.
 }
