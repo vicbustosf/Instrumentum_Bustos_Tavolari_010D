@@ -20,17 +20,6 @@ public class UsuarioService {
     @Autowired
     private BandaRepository bandaRepository;
 
-    @PostConstruct
-    public void cargarDatosPrueba() {
-        if (usuarioRepository.count() > 0) return;
-
-        Banda banda = bandaRepository.save(new Banda(null, "Los Solos", LocalDate.of(2024, 6, 15)));
-
-        usuarioRepository.save(new Usuario(null, "carlos_gtr", "carlos@mail.com", "Musico", banda));
-        usuarioRepository.save(new Usuario(null, "sofia_bass", "sofia@mail.com", "Musico", banda));
-        usuarioRepository.save(new Usuario(null, "pedro_sound", "pedro@mail.com", "Tech", banda));
-        usuarioRepository.save(new Usuario(null, "ana_lights", "ana@mail.com", "Tech", banda));
-    }
 
     public List<Usuario> listarUsuarios() {
         return usuarioRepository.findAll();
