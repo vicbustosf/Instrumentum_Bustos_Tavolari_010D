@@ -60,6 +60,26 @@
             "projectName": "api-gateway",
             "args": "",
             "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-ServiceAuthApplication<service-auth>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "cl.instrumentum.service_auth.ServiceAuthApplication",
+            "projectName": "service-auth",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-ServiceLogisticaApplication<service-logistica>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "cl.instrumentum.service_logistica.ServiceLogisticaApplication",
+            "projectName": "service-logistica",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
         }
     ]
 }
