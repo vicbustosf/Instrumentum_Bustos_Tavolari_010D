@@ -10,7 +10,7 @@ spring:
         - id: service-usuario
           uri: http://localhost:8081
           predicates:
-            - Path=/api/v2/usuarios/**, /api/v1/bandas/**
+            - Path=/api/v2/usuarios/**, /api/v2/bandas/**
 
         - id: service-rig-equipos
           uri: http://localhost:8085
