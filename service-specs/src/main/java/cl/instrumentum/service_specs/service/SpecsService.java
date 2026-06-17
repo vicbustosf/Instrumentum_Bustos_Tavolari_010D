@@ -22,21 +22,6 @@ public class SpecsService {
     @Autowired
     private WebClient.Builder webClientBuilder;
 
-    @PostConstruct
-    public void cargarDatosPrueba() {
-        if (instrumentoRepository.count() > 0) return;
-
-        
-        instrumentoRepository.save(new EspecificacionInstrumento(1L, "Aliso", "HSS", "010"));
-        instrumentoRepository.save(new EspecificacionInstrumento(2L, "Caoba", "HH", "011"));
-        electronicaRepository.save(new EspecificacionElectronica(3L, "9V", 15.0, "Distortion"));
-
-     
-        instrumentoRepository.save(new EspecificacionInstrumento(4L, "Aliso", "PJ", "045"));
-        electronicaRepository.save(new EspecificacionElectronica(5L, "220V", 100.0, "Valvular"));
-    }
-
-
     private void validarEquipo(Long equipoId) {
         webClientBuilder.build()
                 .get()
@@ -60,19 +45,29 @@ public class SpecsService {
 
     public Object obtenerEspecificacionPorEquipo(Long equipoId) {
         Optional<EspecificacionInstrumento> inst = instrumentoRepository.findById(equipoId);
-        if (inst.isPresent()){ 
+        if (inst.isPresent()) {
             return inst.get();
         }
         Optional<EspecificacionElectronica> elec = electronicaRepository.findById(equipoId);
         return elec.orElse(null);
     }
 
+    // CORRECCIÓN PROBLEMA 2: Se reemplaza deleteById() por findById().ifPresent(repo::delete).
+    //
+    // El problema original era que deleteById() en Spring Data JPA lanza
+    // EmptyResultDataAccessException si el registro no existe, causando un 500.
+    // Un equipo solo puede ser INSTRUMENTO o ELECTRONICO, nunca ambos, por lo tanto
+    // siempre uno de los dos repositorios no va a encontrar nada.
+    //
+    // Con ifPresent(), si no existe el registro simplemente no hace nada,
+    // en vez de explotar con una excepción.
     public void eliminarPorEquipoId(Long equipoId) {
-        instrumentoRepository.deleteById(equipoId);
-        electronicaRepository.deleteById(equipoId);
-    }
+        instrumentoRepository.findById(equipoId)
+                .ifPresent(instrumentoRepository::delete);
 
-    
+        electronicaRepository.findById(equipoId)
+                .ifPresent(electronicaRepository::delete);
+    }
 
     public Optional<EspecificacionInstrumento> obtenerInstrumentoPorId(Long equipoId) {
         return instrumentoRepository.findById(equipoId);

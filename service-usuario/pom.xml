@@ -8,7 +8,7 @@
 		<version>3.5.14</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.instrumentum</groupId>
+	<groupId>cl.instrumentum</groupId>
 	<artifactId>service-usuario</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>service-usuario</name>
