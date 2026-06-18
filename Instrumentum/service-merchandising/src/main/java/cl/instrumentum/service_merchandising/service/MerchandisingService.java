@@ -59,7 +59,7 @@ public class MerchandisingService {
         try {
             webClientBuilder.build()
                     .get()
-                    .uri("http://localhost:8085/api/v1/eventos/" + idEvento)
+                    .uri("http://localhost:8086/api/v1/eventos/" + idEvento)
                     .retrieve()
                     .toBodilessEntity()
                     .block();
