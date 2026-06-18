@@ -1,10 +1,10 @@
-package com.instrumentum.service_usuario;
+package cl.instrumentum.service_auth;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class ServiceUsuarioApplicationTests {
+class ServiceAuthApplicationTests {
 
 	@Test
 	void contextLoads() {
