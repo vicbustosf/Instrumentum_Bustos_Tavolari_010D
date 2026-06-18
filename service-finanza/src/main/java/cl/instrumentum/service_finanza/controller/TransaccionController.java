@@ -1,105 +1,90 @@
 package cl.instrumentum.service_finanza.controller;
 
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.*;
+
 import cl.instrumentum.service_finanza.model.Transaccion;
 import cl.instrumentum.service_finanza.service.TransaccionService;
 import jakarta.validation.Valid;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
 @RestController
-@RequestMapping("/api/v2/transacciones")
+@RequestMapping("/api/v2/finanzas")
 public class TransaccionController {
 
     @Autowired
     private TransaccionService transaccionService;
 
     @GetMapping
-    public ResponseEntity<List<Transaccion>> listarTransacciones() {
-        return ResponseEntity.ok(transaccionService.listarTransacciones());
+    public List<Transaccion> listar() {
+        return transaccionService.listarTransacciones();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Transaccion> obtenerPorId(@PathVariable Long id) {
-        Optional<Transaccion> transaccion = transaccionService.buscarPorId(id);
-
-        return transaccion.map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<Map<String, Object>> obtenerPorId(@PathVariable Long id) {
+        return transaccionService.buscarPorId(id) // Usando buscarPorId de tu Service
+                .map(t -> ResponseEntity.ok(
+                        Map.<String, Object>of("mensaje", "Transacción encontrada correctamente.", "transaccion", t)))
+                .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(Map.<String, Object>of("mensaje", "No existe una transacción con ID " + id + ".")));
     }
 
     @PostMapping
-    public ResponseEntity<Map<String, Object>> crearTransaccion(
-            @Valid @RequestBody Transaccion transaccion) {
-
+    public ResponseEntity<Map<String, Object>> registrar(@Valid @RequestBody Transaccion transaccion) {
+        // Usando guardarTransaccion de tu Service (el cual internamente valida la banda con WebClient)
         Transaccion nueva = transaccionService.guardarTransaccion(transaccion);
-
-        return ResponseEntity.status(201)
-                .body(Map.of(
-                        "mensaje", "Transacción creada correctamente.",
-                        "transaccion", nueva
-                ));
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(Map.<String, Object>of("mensaje", "Transacción registrada correctamente.", "transaccion", nueva));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Map<String, Object>> actualizarTransaccion(
-            @PathVariable Long id,
-            @Valid @RequestBody Transaccion transaccion) {
-
-        Transaccion actualizada =
-                transaccionService.actualizarTransaccion(id, transaccion);
-
-        if (actualizada == null) {
-            return ResponseEntity.status(404)
-                    .body(Map.of(
-                            "mensaje",
-                            "No existe una transacción con ID " + id
-                    ));
-        }
-
-        return ResponseEntity.ok(
-                Map.of(
-                        "mensaje",
-                        "Transacción actualizada correctamente.",
-                        "transaccion",
-                        actualizada
-                ));
+    public ResponseEntity<Map<String, Object>> actualizar(@PathVariable Long id, @Valid @RequestBody Transaccion transaccion) {
+        // Dado que tu service devuelve la entidad o null, lo envolvemos en Optional.ofNullable para usar el patrón limpio
+        return Optional.ofNullable(transaccionService.actualizarTransaccion(id, transaccion))
+                .map(t -> ResponseEntity.ok(
+                        Map.<String, Object>of("mensaje", "Transacción actualizada correctamente.", "transaccion", t)))
+                .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(Map.<String, Object>of("mensaje", "No existe una transacción con ID " + id + " o no se pudo actualizar.")));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Map<String, String>> eliminar(
-            @PathVariable Long id) {
-
-        Optional<Transaccion> transaccion =
-                transaccionService.buscarPorId(id);
-
-        if (transaccion.isEmpty()) {
-            return ResponseEntity.status(404)
-                    .body(Map.of(
-                            "mensaje",
-                            "No existe una transacción con ID " + id
-                    ));
+    public ResponseEntity<Map<String, String>> eliminar(@PathVariable Long id) {
+        boolean eliminado = transaccionService.eliminarTransaccion(id);
+        if (eliminado) {
+            return ResponseEntity.ok(Map.of("mensaje", "Transacción " + id + " eliminada correctamente."));
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("mensaje", "No existe una transacción con ID " + id + "."));
         }
-
-        transaccionService.eliminarTransaccion(id);
-
-        return ResponseEntity.ok(
-                Map.of(
-                        "mensaje",
-                        "Transacción " + id + " eliminada correctamente."
-                ));
     }
 
     @GetMapping("/banda/{idBanda}")
-    public ResponseEntity<List<Transaccion>> obtenerPorBanda(
-            @PathVariable Long idBanda) {
+    public List<Transaccion> obtenerPorBanda(@PathVariable Long idBanda) {
+        return transaccionService.obtenerPorBanda(idBanda);
+    }
 
-        return ResponseEntity.ok(
-                transaccionService.obtenerPorBanda(idBanda)
-        );
+    // Interceptores de excepciones automáticos para WebClient / BD y Validaciones
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<Map<String, String>> handleRuntimeException(RuntimeException e) {
+        String msg = e.getMessage() != null ? e.getMessage() : "Ocurrió un error inesperado en el módulo de finanzas.";
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(Map.of("mensaje", "Error interno del servidor: " + msg));
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Map<String, String>> handleValidationException(MethodArgumentNotValidException e) {
+        String errores = e.getBindingResult().getFieldErrors()
+                .stream()
+                .map(fe -> fe.getField() + ": " + fe.getDefaultMessage())
+                .collect(Collectors.joining(", "));
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(Map.of("mensaje", "Error de validación: " + errores));
     }
 }

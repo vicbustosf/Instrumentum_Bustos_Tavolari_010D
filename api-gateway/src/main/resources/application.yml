@@ -41,3 +41,13 @@ spring:
           uri: http://localhost:8086
           predicates:
             - Path=/api/v2/eventos/**
+        
+        - id: service-finanza
+          uri: http://localhost:8087
+          predicates:
+            - Path=/api/v2/transacciones/**
+
+        - id: service-gira
+          uri: http://localhost:8088
+          predicates:
+            - Path=/api/v2/giras/** , /api/v2/paradas-giras/**

@@ -2,11 +2,14 @@ package cl.instrumentum.service_specs.controller;
 
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
+
 import cl.instrumentum.service_specs.model.EspecificacionElectronica;
 import cl.instrumentum.service_specs.model.EspecificacionInstrumento;
 import cl.instrumentum.service_specs.service.SpecsService;
@@ -19,87 +22,108 @@ public class EspecsController {
     @Autowired
     private SpecsService specsService;
 
-    //Pide el equipoId en la URL porque cada especificación está asociada a un
-    //  equipo específico, y así se asegura que se crea la especificación para el equipo correcto. 
-    @PostMapping("/instrumento/{equipoId}")
-    public ResponseEntity<EspecificacionInstrumento> crearInstrumento(
-            @PathVariable Long equipoId,
-            @Valid @RequestBody EspecificacionInstrumento espec) {
-        EspecificacionInstrumento guardada = specsService.guardarInstrumento(equipoId, espec);
-        return ResponseEntity.status(HttpStatus.CREATED).body(guardada);
+    // ==========================================
+    // ===          INSTRUMENTOS              ===
+    // ==========================================
+
+    @GetMapping("/instrumento/{equipoId}")
+    public ResponseEntity<Map<String, Object>> obtenerInstrumento(@PathVariable Long equipoId) {
+        return specsService.obtenerInstrumentoPorId(equipoId)
+                .map(i -> ResponseEntity.ok(
+                        Map.<String, Object>of("mensaje", "Especificación de instrumento encontrada correctamente.", "especificacion", i)))
+                .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(Map.<String, Object>of("mensaje", "No existen especificaciones de instrumento para el equipo con ID " + equipoId + ".")));
     }
 
-    //Lo mismo de arriba
-
-    @PostMapping("/electronica/{equipoId}")
-    public ResponseEntity<EspecificacionElectronica> crearElectronica(
-            @PathVariable Long equipoId,
-            @Valid @RequestBody EspecificacionElectronica espec) {
-        EspecificacionElectronica guardada = specsService.guardarElectronica(equipoId, espec);
-        return ResponseEntity.status(HttpStatus.CREATED).body(guardada);
+    @PostMapping("/instrumento/{equipoId}")
+    public ResponseEntity<Map<String, Object>> crearInstrumento(
+            @PathVariable Long equipoId, 
+            @Valid @RequestBody EspecificacionInstrumento ins) {
+        
+        // Se llama pasándole el ID de la URL y el cuerpo del JSON según la firma de tu Service
+        EspecificacionInstrumento nuevo = specsService.guardarInstrumento(equipoId, ins);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(Map.<String, Object>of("mensaje", "Especificación de instrumento creada correctamente.", "especificacion", nuevo));
     }
 
     @PutMapping("/instrumento/{equipoId}")
-    public ResponseEntity<EspecificacionInstrumento> actualizarInstrumento(
-            @PathVariable Long equipoId,
-            @Valid @RequestBody EspecificacionInstrumento datos) {
+    public ResponseEntity<Map<String, Object>> actualizarInstrumento(
+            @PathVariable Long equipoId, 
+            @Valid @RequestBody EspecificacionInstrumento ins) {
+        
         return specsService.obtenerInstrumentoPorId(equipoId)
-                .map(e -> {
-                    e.setTipoMadera(datos.getTipoMadera());
-                    e.setConfigPastillas(datos.getConfigPastillas());
-                    e.setCalibreCuerdas(datos.getCalibreCuerdas());
-                    return ResponseEntity.ok(specsService.guardarInstrumento(equipoId, e));
+                .map(existente -> {
+                    EspecificacionInstrumento actualizada = specsService.guardarInstrumento(equipoId, ins);
+                    return ResponseEntity.ok(
+                            Map.<String, Object>of("mensaje", "Especificación de instrumento actualizada correctamente.", "especificacion", actualizada));
                 })
-                .orElse(ResponseEntity.notFound().build());
+                .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(Map.<String, Object>of("mensaje", "No existen especificaciones de instrumento para el equipo con ID " + equipoId + ".")));
+    }
+
+    // ==========================================
+    // ===           ELECTRÓNICA              ===
+    // ==========================================
+
+    @GetMapping("/electronica/{equipoId}")
+    public ResponseEntity<Map<String, Object>> obtenerElectronica(@PathVariable Long equipoId) {
+        return specsService.obtenerElectronicaPorId(equipoId)
+                .map(el -> ResponseEntity.ok(
+                        Map.<String, Object>of("mensaje", "Especificación electrónica encontrada correctamente.", "especificacion", el)))
+                .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(Map.<String, Object>of("mensaje", "No existen especificaciones electrónicas para el equipo con ID " + equipoId + ".")));
+    }
+
+    @PostMapping("/electronica/{equipoId}")
+    public ResponseEntity<Map<String, Object>> crearElectronica(
+            @PathVariable Long equipoId, 
+            @Valid @RequestBody EspecificacionElectronica el) {
+        
+        EspecificacionElectronica nueva = specsService.guardarElectronica(equipoId, el);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(Map.<String, Object>of("mensaje", "Especificación electrónica creada correctamente.", "especificacion", nueva));
     }
 
     @PutMapping("/electronica/{equipoId}")
-    public ResponseEntity<EspecificacionElectronica> actualizarElectronica(
-            @PathVariable Long equipoId,
-            @Valid @RequestBody EspecificacionElectronica datos) {
+    public ResponseEntity<Map<String, Object>> actualizarElectronica(
+            @PathVariable Long equipoId, 
+            @Valid @RequestBody EspecificacionElectronica el) {
+        
         return specsService.obtenerElectronicaPorId(equipoId)
-                .map(e -> {
-                    e.setVoltaje(datos.getVoltaje());
-                    e.setConsumo(datos.getConsumo());
-                    e.setTipoCircuito(datos.getTipoCircuito());
-                    return ResponseEntity.ok(specsService.guardarElectronica(equipoId, e));
+                .map(existente -> {
+                    EspecificacionElectronica actualizada = specsService.guardarElectronica(equipoId, el);
+                    return ResponseEntity.ok(
+                            Map.<String, Object>of("mensaje", "Especificación electrónica actualizada correctamente.", "especificacion", actualizada));
                 })
-                .orElse(ResponseEntity.notFound().build());
+                .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(Map.<String, Object>of("mensaje", "No existen especificaciones electrónicas para el equipo con ID " + equipoId + ".")));
     }
-    
-    // Este método es para validar que el equipo existe antes de crear o actualizar una especificación.
-    @GetMapping("/equipo/{equipoId}")
-    public ResponseEntity<?> obtenerPorEquipo(@PathVariable Long equipoId) {
-        Object espec = specsService.obtenerEspecificacionPorEquipo(equipoId);
-        if (espec == null) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(espec);
-    }
+
+    // ==========================================
+    // ===        MÉTODOS AUXILIARES          ===
+    // ==========================================
 
     @DeleteMapping("/equipo/{equipoId}")
-    public ResponseEntity<Map<String, String>> eliminarPorEquipo(
-            @PathVariable Long equipoId) {
-
-        Optional<EspecificacionInstrumento> instrumento =
-                specsService.obtenerInstrumentoPorId(equipoId);
-
-        Optional<EspecificacionElectronica> electronica =
-                specsService.obtenerElectronicaPorId(equipoId);
-
-        if (instrumento.isEmpty() && electronica.isEmpty()) {
-            return ResponseEntity.status(404)
-                    .body(Map.of( "mensaje","No existen especificaciones para el equipo "
-                                    + equipoId
-                    ));
-        }
-
+    public ResponseEntity<Map<String, String>> eliminarPorEquipo(@PathVariable Long equipoId) {
         specsService.eliminarPorEquipoId(equipoId);
+        return ResponseEntity.ok(Map.of("mensaje", "Especificaciones eliminadas correctamente para el equipo con ID " + equipoId + "."));
+    }
 
-        return ResponseEntity.ok(
-                Map.of("mensaje","Las especificaciones del equipo "
-                                + equipoId
-                                + " fueron eliminadas correctamente."
-                    ));
+    // Interceptores automáticos de excepciones para atrapar fallos del WebClient y de Validaciones
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<Map<String, String>> handleRuntimeException(RuntimeException e) {
+        String msg = e.getMessage() != null ? e.getMessage() : "Ocurrió un error inesperado en el módulo de especificaciones.";
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(Map.of("mensaje", "Error interno del servidor: " + msg));
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Map<String, String>> handleValidationException(MethodArgumentNotValidException e) {
+        String errores = e.getBindingResult().getFieldErrors()
+                .stream()
+                .map(fe -> fe.getField() + ": " + fe.getDefaultMessage())
+                .collect(Collectors.joining(", "));
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(Map.of("mensaje", "Error de validación: " + errores));
     }
 }

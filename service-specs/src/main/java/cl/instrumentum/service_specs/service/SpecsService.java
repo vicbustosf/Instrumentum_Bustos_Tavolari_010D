@@ -32,15 +32,15 @@ public class SpecsService {
     }
 
     public EspecificacionInstrumento guardarInstrumento(Long equipoId, EspecificacionInstrumento espec) {
-        validarEquipo(equipoId);
+        validarEquipo(equipoId);   // ← presente
         espec.setIdEquipo(equipoId);
         return instrumentoRepository.save(espec);
     }
 
-    public EspecificacionElectronica guardarElectronica(Long equipoId, EspecificacionElectronica espec) {
-        validarEquipo(equipoId);
-        espec.setIdEquipo(equipoId);
-        return electronicaRepository.save(espec);
+    public EspecificacionElectronica guardarElectronica(Long equipoId, EspecificacionElectronica datos) {
+    // Le pasamos manualmente el ID del equipo recibido por la URL antes de guardar
+        datos.setIdEquipo(equipoId); 
+        return electronicaRepository.save(datos);
     }
 
     public Object obtenerEspecificacionPorEquipo(Long equipoId) {

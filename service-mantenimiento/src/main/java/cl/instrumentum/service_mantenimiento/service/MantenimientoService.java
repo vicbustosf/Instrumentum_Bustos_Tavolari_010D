@@ -62,7 +62,7 @@ public class MantenimientoService {
     // evitar problemas de integridad, o sea, que no queden registros huérfanos en la base de datos 
     // relacionados con el equipo eliminado.
     @Transactional
-    public void eliminarPorEquipo(Long equipoId) {
+    public void eliminarMantenimiento(Long equipoId) {
         mantenimientoRepository.deleteByEquipoId(equipoId);
     }
 }

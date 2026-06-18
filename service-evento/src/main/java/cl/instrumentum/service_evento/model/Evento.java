@@ -17,7 +17,6 @@ public class Evento {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @NotNull(message = "El id del evento es obligatorio")
     private Long idEvento;
 
     @NotNull(message = "El id de la banda es obligatorio")
