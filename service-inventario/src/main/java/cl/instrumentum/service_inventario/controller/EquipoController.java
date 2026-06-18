@@ -29,9 +29,9 @@ public class EquipoController {
                 .body(Map.of("mensaje", "Equipo creado correctamente.", "equipo", nuevo));
     }
 
-    @GetMapping("/todos")
-    public List<Equipo> listarTodos() {
-        return inventarioService.listarTodos();
+    @GetMapping
+    public List<Equipo> listar() {
+        return inventarioService.listarTodos(); // o el nombre exacto que tenga en tu Service
     }
 
     @GetMapping("/propietario/{propietarioId}")

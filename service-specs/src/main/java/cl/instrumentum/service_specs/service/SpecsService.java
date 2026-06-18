@@ -38,8 +38,8 @@ public class SpecsService {
     }
 
     public EspecificacionElectronica guardarElectronica(Long equipoId, EspecificacionElectronica datos) {
-    // Le pasamos manualmente el ID del equipo recibido por la URL antes de guardar
-        datos.setIdEquipo(equipoId); 
+        validarEquipo(equipoId); // ← falta esta línea
+        datos.setIdEquipo(equipoId);
         return electronicaRepository.save(datos);
     }
 

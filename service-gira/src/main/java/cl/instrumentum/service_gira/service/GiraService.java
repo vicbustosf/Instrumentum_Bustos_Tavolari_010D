@@ -43,7 +43,7 @@ public class GiraService {
     private void validarEvento(Long idEvento) {
         webClientBuilder.build()
                 .get()
-                .uri("http://localhost:8083/api/v2/eventos/" + idEvento)
+                .uri("http://localhost:8086/api/v2/eventos/" + idEvento)
                 .retrieve()
                 .toBodilessEntity()
                 .block();

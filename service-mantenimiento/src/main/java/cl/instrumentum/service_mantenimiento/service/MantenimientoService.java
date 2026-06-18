@@ -61,8 +61,17 @@ public class MantenimientoService {
     //usamos @Transactional para asegurar que la eliminación se realice correctamente y 
     // evitar problemas de integridad, o sea, que no queden registros huérfanos en la base de datos 
     // relacionados con el equipo eliminado.
+    
     @Transactional
-    public void eliminarMantenimiento(Long equipoId) {
-        mantenimientoRepository.deleteByEquipoId(equipoId);
+    public boolean eliminarMantenimiento(Long equipoId) {
+        // Primero verificamos si existe al menos un mantenimiento para este equipo
+        List<Mantenimiento> registros = mantenimientoRepository.findByEquipoIdOrderByFechaDesc(equipoId);
+        
+        if (!registros.isEmpty()) {
+            mantenimientoRepository.deleteByEquipoId(equipoId);
+            return true; // Sí había registros y fueron eliminados
+        }
+        
+        return false; // El equipo no tenía mantenimientos registrados
     }
 }
