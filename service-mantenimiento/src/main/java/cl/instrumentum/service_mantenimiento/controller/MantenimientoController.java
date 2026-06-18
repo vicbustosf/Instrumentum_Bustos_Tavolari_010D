@@ -69,6 +69,19 @@ public class MantenimientoController {
         return ResponseEntity.ok(Map.of("mensaje", "Mantenimientos eliminados correctamente para el equipo " + equipoId + "."));
     }
 
+    // DELETE: Eliminar un mantenimiento específico por su ID
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Map<String, String>> eliminarPorId(@PathVariable Long id) {
+        boolean eliminado = mantenimientoService.eliminarMantenimientoPorId(id);
+        
+        if (eliminado) {
+            return ResponseEntity.ok(Map.of("mensaje", "Mantenimiento " + id + " eliminado correctamente."));
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("mensaje", "No existe un mantenimiento con ID " + id + "."));
+        }
+    }
+
     // GET: Verificar si un equipo requiere mantenimiento preventivo
     @GetMapping("/equipo/{equipoId}/requiere")
     public boolean requiereMantenimiento(@PathVariable Long equipoId) {

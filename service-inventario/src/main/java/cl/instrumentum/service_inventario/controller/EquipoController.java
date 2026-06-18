@@ -39,15 +39,23 @@ public class EquipoController {
         return inventarioService.listarEquiposPorPropietario(propietarioId);
     }
 
-    @GetMapping("/buscar/{nombre}/{marca}/{categoria}")
-    public List<Equipo> buscar(
-            @PathVariable String nombre,
-            @PathVariable String marca,
-            @PathVariable String categoria) {
-        String n = "_".equals(nombre) ? null : nombre;
-        String m = "_".equals(marca) ? null : marca;
-        String c = "_".equals(categoria) ? null : categoria;
-        return inventarioService.buscarEquipos(n, m, c);
+    // GET: Buscar equipos con filtros opcionales por Query Params
+    @GetMapping("/buscar")
+    public ResponseEntity<List<Equipo>> buscarEquipos(
+            @RequestParam(required = false) String nombre,
+            @RequestParam(required = false) String marca,
+            @RequestParam(required = false) String categoria) {
+        
+        // Si tu servicio aún usa "_" para la lógica de base de datos, 
+        // podemos hacer una pequeña adaptación aquí mismo para no romper tu Service:
+        String filtroNombre = (nombre == null || nombre.trim().isEmpty()) ? "_" : nombre;
+        String filtroMarca = (marca == null || marca.trim().isEmpty()) ? "_" : marca;
+        String filtroCategoria = (categoria == null || categoria.trim().isEmpty()) ? "_" : categoria;
+
+        // Llamas al método que ya tienes en tu Service
+        List<Equipo> resultados = inventarioService.buscarEquipos(filtroNombre, filtroMarca, filtroCategoria);
+        
+        return ResponseEntity.ok(resultados);
     }
 
     @GetMapping("/{id}")

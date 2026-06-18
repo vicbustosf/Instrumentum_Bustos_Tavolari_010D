@@ -39,7 +39,7 @@ public class GiraService {
                 .block();
     }
 
-    // Valida que el evento exista en service-evento (Asumiendo puerto 8083, ajusta si es otro)
+    // Valida que el evento exista en service-evento (Asumiendo puerto 8086, ajusta si es otro)
     private void validarEvento(Long idEvento) {
         webClientBuilder.build()
                 .get()

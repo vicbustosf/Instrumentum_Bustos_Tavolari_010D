@@ -55,9 +55,21 @@ public class UsuarioService {
         return bandaRepository.save(banda);
     }
 
-    // MODIFICADO: Retorna boolean verificando existencia
+    // MODIFICACION 1: Retorna boolean verificando existencia
+    // MODIFICACION 2: Verifica usuarios asociados antes de eliminar
     public boolean eliminarBanda(Long id) {
         if (bandaRepository.existsById(id)) {
+            
+            // 1. Verificamos si hay usuarios que pertenezcan a esta banda
+            List<Usuario> usuariosAsociados = usuarioRepository.findByIdBanda(id);
+            
+            // 2. Si la lista no está vacía, frenamos la eliminación con una excepción clara
+            if (!usuariosAsociados.isEmpty()) {
+                throw new RuntimeException("Conflicto de integridad: No se puede eliminar la banda con ID " 
+                        + id + " porque tiene " + usuariosAsociados.size() + " usuario(s) vinculado(s).");
+            }
+            
+            // 3. Si está limpia, procedemos a borrarla
             bandaRepository.deleteById(id);
             return true;
         }

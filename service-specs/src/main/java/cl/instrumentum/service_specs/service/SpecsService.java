@@ -8,7 +8,7 @@ import cl.instrumentum.service_specs.model.EspecificacionElectronica;
 import cl.instrumentum.service_specs.model.EspecificacionInstrumento;
 import cl.instrumentum.service_specs.repository.EspecificacionElectronicaRepository;
 import cl.instrumentum.service_specs.repository.EspecificacionInstrumentoRepository;
-import jakarta.annotation.PostConstruct;
+
 
 @Service
 public class SpecsService {

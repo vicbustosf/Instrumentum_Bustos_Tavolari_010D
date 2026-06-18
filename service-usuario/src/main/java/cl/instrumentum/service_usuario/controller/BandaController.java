@@ -43,12 +43,14 @@ public class BandaController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Map<String, Object>> actualizar(@PathVariable Long id, @RequestBody Banda datos) {
+    public ResponseEntity<Map<String, Object>> actualizar(
+            @PathVariable Long id, 
+            @Valid @RequestBody Banda banda) { // Escudo de validación activo
+        
         return usuarioService.buscarBandaPorId(id)
-                .map(b -> {
-                    b.setNombre(datos.getNombre());
-                    b.setFechaRegistro(datos.getFechaRegistro());
-                    Banda actualizada = usuarioService.guardarBanda(b);
+                .map(existente -> {
+                    banda.setIdBanda(id); // Respetamos el ID de la URL
+                    Banda actualizada = usuarioService.guardarBanda(banda);
                     return ResponseEntity.ok(
                             Map.<String, Object>of("mensaje", "Banda actualizada correctamente.", "banda", actualizada));
                 })

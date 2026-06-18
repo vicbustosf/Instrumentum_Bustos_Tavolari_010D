@@ -74,4 +74,14 @@ public class MantenimientoService {
         
         return false; // El equipo no tenía mantenimientos registrados
     }
+
+    // Elimina un registro de mantenimiento específico por su ID único
+    @Transactional
+    public boolean eliminarMantenimientoPorId(Long id) {
+        if (mantenimientoRepository.existsById(id)) {
+            mantenimientoRepository.deleteById(id);
+            return true;
+        }
+        return false;
+    }
 }

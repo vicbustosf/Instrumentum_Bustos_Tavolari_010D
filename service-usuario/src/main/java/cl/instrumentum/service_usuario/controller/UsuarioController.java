@@ -42,15 +42,16 @@ public class UsuarioController {
                 .body(Map.<String, Object>of("mensaje", "Usuario creado correctamente.", "usuario", nuevo));
     }
 
+    // PUT: Actualizar un usuario existente
     @PutMapping("/{id}")
-    public ResponseEntity<Map<String, Object>> actualizar(@PathVariable Long id, @RequestBody Usuario datos) {
+    public ResponseEntity<Map<String, Object>> actualizar(
+            @PathVariable Long id, 
+            @Valid @RequestBody Usuario usuario) {
+        
         return usuarioService.buscarUsuarioPorId(id)
-                .map(u -> {
-                    u.setUsername(datos.getUsername());
-                    u.setEmail(datos.getEmail());
-                    u.setRol(datos.getRol());
-                    u.setBanda(datos.getBanda());
-                    Usuario actualizado = usuarioService.guardarUsuario(u);
+                .map(existente -> {
+                    usuario.setIdUser(id); 
+                    Usuario actualizado = usuarioService.guardarUsuario(usuario);
                     return ResponseEntity.ok(
                             Map.<String, Object>of("mensaje", "Usuario actualizado correctamente.", "usuario", actualizado));
                 })
