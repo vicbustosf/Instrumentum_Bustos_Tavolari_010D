@@ -22,18 +22,18 @@ public class ParadaGira {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idParada;
 
-    @NotNull
+    @NotNull(message = "El ID de la gira es obligatorio")
     private Long idGira;
 
-    @NotNull
+    @NotNull(message = "El ID del evento es obligatorio")
     private Long idEvento;
 
-    @NotBlank
+    @NotBlank(message = "La ciudad es obligatoria")
     private String ciudad;
 
-    @NotBlank
+    @NotBlank(message = "El detalle del alojamiento es obligatorio")
     private String alojamiento;
 
-    @NotBlank
+    @NotBlank(message = "El detalle del transporte es obligatorio")
     private String transporte;
 }
