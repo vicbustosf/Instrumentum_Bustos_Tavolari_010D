@@ -48,7 +48,7 @@ spring:
           predicates:
             - Path=/api/v1/canciones/**
 
-        # --- Nuevos Microservicio ---
+        # --- Nuevos Microservicios ---
         - id: service-logistica
           uri: http://localhost:8090
           predicates:
@@ -59,6 +59,17 @@ spring:
           predicates:
             - Path=/logistica/api-docs
 
+        - id: service-merchandising
+          uri: http://localhost:8091
+          predicates:
+            - Path=/api/v1/merchandising/**
+
+        - id: merchandising-docs
+          uri: http://localhost:8091
+          predicates:
+            - Path=/merchandising/api-docs
+
+# Preguntarle a claude cómo organizar las rutas en el api para que nada se interponga con nada...
 eureka:
   client:
     register-with-eureka: false
@@ -70,7 +81,12 @@ springdoc:
       - name: Servicio Logistica
         url: /logistica/api-docs
 
+      - name: Servicio Merchandising
+        url: /merchandising/api-docs
+
 logging:
   level:
     org.springframework.cloud.gateway: TRACE
     org.springframework.http.server.reactive: DEBUG
+
+  # evento=8086 finanza=8087? gira=8088?
