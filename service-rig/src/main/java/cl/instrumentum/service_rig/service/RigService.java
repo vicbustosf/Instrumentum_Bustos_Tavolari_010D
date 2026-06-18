@@ -12,7 +12,7 @@ import cl.instrumentum.service_rig.model.Cancion;
 import cl.instrumentum.service_rig.model.EquipoCancion;
 import cl.instrumentum.service_rig.repository.CancionRepository;
 import cl.instrumentum.service_rig.repository.EquipoCancionRepository;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class RigService {

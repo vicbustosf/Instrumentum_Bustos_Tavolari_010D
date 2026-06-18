@@ -40,21 +40,17 @@ public class EquipoController {
     }
 
     // GET: Buscar equipos con filtros opcionales por Query Params
-    @GetMapping("/buscar")
+   @GetMapping("/buscar")
     public ResponseEntity<List<Equipo>> buscarEquipos(
             @RequestParam(required = false) String nombre,
             @RequestParam(required = false) String marca,
             @RequestParam(required = false) String categoria) {
-        
-        // Si tu servicio aún usa "_" para la lógica de base de datos, 
-        // podemos hacer una pequeña adaptación aquí mismo para no romper tu Service:
-        String filtroNombre = (nombre == null || nombre.trim().isEmpty()) ? "_" : nombre;
-        String filtroMarca = (marca == null || marca.trim().isEmpty()) ? "_" : marca;
-        String filtroCategoria = (categoria == null || categoria.trim().isEmpty()) ? "_" : categoria;
 
-        // Llamas al método que ya tienes en tu Service
+        String filtroNombre = (nombre == null || nombre.trim().isEmpty()) ? null : nombre;
+        String filtroMarca = (marca == null || marca.trim().isEmpty()) ? null : marca;
+        String filtroCategoria = (categoria == null || categoria.trim().isEmpty()) ? null : categoria;
+
         List<Equipo> resultados = inventarioService.buscarEquipos(filtroNombre, filtroMarca, filtroCategoria);
-        
         return ResponseEntity.ok(resultados);
     }
 

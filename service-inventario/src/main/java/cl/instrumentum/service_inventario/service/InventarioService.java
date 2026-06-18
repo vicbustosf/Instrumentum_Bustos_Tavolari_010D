@@ -116,12 +116,18 @@ public class InventarioService {
         if (!marcaRepository.existsById(id)) {
             throw new NoSuchElementException("No existe una marca con ID " + id + ".");
         }
+        if (!equipoRepository.findByMarca_Id(id).isEmpty()) {
+            throw new IllegalArgumentException("No se puede eliminar la marca con ID " + id + " porque tiene equipos asociados.");
+        }
         marcaRepository.deleteById(id);
     }
 
     public void eliminarCategoria(Long id) {
         if (!categoriaRepository.existsById(id)) {
             throw new NoSuchElementException("No existe una categoría con ID " + id + ".");
+        }
+        if (!equipoRepository.findByCategoria_Id(id).isEmpty()) {
+            throw new IllegalArgumentException("No se puede eliminar la categoría con ID " + id + " porque tiene equipos asociados.");
         }
         categoriaRepository.deleteById(id);
     }

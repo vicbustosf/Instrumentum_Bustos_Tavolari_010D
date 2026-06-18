@@ -23,5 +23,8 @@ public interface EquipoRepository extends JpaRepository<Equipo, Long> {
                                           @Param("marca") String marca,
                                           @Param("categoria") String categoria);
 
+    List<Equipo> findByMarca_Id(Long marcaId);
+    List<Equipo> findByCategoria_Id(Long categoriaId);
+
     //Metodos propios
 }
