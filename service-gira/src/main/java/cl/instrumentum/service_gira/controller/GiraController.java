@@ -12,7 +12,6 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
 import cl.instrumentum.service_gira.model.Gira;
-import cl.instrumentum.service_gira.model.ParadaGira;
 import cl.instrumentum.service_gira.service.GiraService;
 import jakarta.validation.Valid;
 
@@ -24,7 +23,6 @@ public class GiraController {
     private GiraService giraService;
 
     // ENDPOINTS DE GIRAS          
-    
 
     @GetMapping
     public List<Gira> listarGiras() {
@@ -72,55 +70,12 @@ public class GiraController {
         }
     }
 
-    
-    // ENDPOINTS DE PARADAS        
-
-    @GetMapping("/paradas/gira/{idGira}")
-    public List<ParadaGira> listarParadasPorGira(@PathVariable Long idGira) {
-        return giraService.listarParadasPorGira(idGira);
-    }
-
-    @GetMapping("/paradas/{id}")
-    public ResponseEntity<Map<String, Object>> obtenerParadaPorId(@PathVariable Long id) {
-        return giraService.buscarParadaPorId(id)
-                .map(p -> ResponseEntity.ok(
-                        Map.<String, Object>of("mensaje", "Parada logística encontrada correctamente.", "parada", p)))
-                .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND)
-                        .body(Map.<String, Object>of("mensaje", "No existe una parada logística con ID " + id + ".")));
-    }
-
-    @PostMapping("/paradas")
-    public ResponseEntity<Map<String, Object>> crearParada(@Valid @RequestBody ParadaGira parada) {
-        ParadaGira nueva = giraService.guardarParada(parada);
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(Map.<String, Object>of("mensaje", "Parada logística registrada correctamente en el itinerario.", "parada", nueva));
-    }
-
-    @PutMapping("/paradas/{id}")
-    public ResponseEntity<Map<String, Object>> actualizarParada(@PathVariable Long id, @Valid @RequestBody ParadaGira parada) {
-        return Optional.ofNullable(giraService.actualizarParada(id, parada))
-                .map(p -> ResponseEntity.ok(
-                        Map.<String, Object>of("mensaje", "Parada logística actualizada correctamente.", "parada", p)))
-                .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND)
-                        .body(Map.<String, Object>of("mensaje", "No existe una parada logística con ID " + id + " o no se pudo actualizar.")));
-    }
-
-    @DeleteMapping("/paradas/{id}")
-    public ResponseEntity<Map<String, String>> eliminarParada(@PathVariable Long id) {
-        boolean eliminado = giraService.eliminarParada(id);
-        if (eliminado) {
-            return ResponseEntity.ok(Map.of("mensaje", "Parada logística " + id + " eliminada correctamente del itinerario."));
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(Map.of("mensaje", "No existe una parada logística con ID " + id + "."));
-        }
-    }
-
     //      ESCUDO CAPTURADOR DE ERRORES   
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<Map<String, String>> handleRuntimeException(RuntimeException e) {
-        String msg = e.getMessage() != null ? e.getMessage() : "Ocurrió un error inesperado en el módulo de giras.";
+        String msg = e.getMessage() != null ?
+                e.getMessage() : "Ocurrió un error inesperado en el módulo de giras.";
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(Map.of("mensaje", "Error interno del servidor: " + msg));
     }

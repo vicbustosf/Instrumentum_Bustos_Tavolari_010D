@@ -51,7 +51,13 @@ public class MantenimientoController {
     public ResponseEntity<Map<String, Object>> actualizar(@PathVariable Long id, @Valid @RequestBody Mantenimiento m) {
         return mantenimientoService.buscarPorId(id)
                 .map(existente -> {
-                    // Seteamos el ID de la URL al objeto para asegurar que modifique el correcto
+                    // CORRECCIÓN: Evitamos que el registro se transfiera a otro equipo.
+                    if (!existente.getEquipoId().equals(m.getEquipoId())) {
+                        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                                .body(Map.<String, Object>of("mensaje", "Error: No puedes transferir un registro de mantenimiento a un equipo distinto."));
+                    }
+                    
+                    // Seteamos el ID de la URI al objeto para asegurar que modifique el correcto
                     m.setId(id); 
                     Mantenimiento actualizado = mantenimientoService.registrarMantenimiento(m);
                     return ResponseEntity.ok(
@@ -64,23 +70,33 @@ public class MantenimientoController {
     // DELETE: Eliminar TODOS los mantenimientos asociados a un equipo
     @DeleteMapping("/equipo/{equipoId}")
     public ResponseEntity<Map<String, String>> eliminarPorEquipo(@PathVariable Long equipoId) {
-        // Como tu método es void y borra por equipoId, lo ejecutamos directamente
-        mantenimientoService.eliminarMantenimiento(equipoId);
-        return ResponseEntity.ok(Map.of("mensaje", "Mantenimientos eliminados correctamente para el equipo " + equipoId + "."));
+        boolean eliminado = mantenimientoService.eliminarMantenimiento(equipoId);
+        if (!eliminado) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("mensaje", "No existen mantenimientos registrados para el equipo con ID " + equipoId + "."));
+        }
+        return ResponseEntity.ok(Map.of("mensaje", "Mantenimientos eliminados correctamente para el equipo con ID " + equipoId + "."));
     }
 
     // DELETE: Eliminar un mantenimiento específico por su ID
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Map<String, String>> eliminarPorId(@PathVariable Long id) {
-        boolean eliminado = mantenimientoService.eliminarMantenimientoPorId(id);
+    @DeleteMapping("/equipo/{equipoId}")
+    public ResponseEntity<Map<String, String>> eliminarMantenimiento(@PathVariable Long equipoId) {
+        boolean eliminado = mantenimientoService.eliminarMantenimiento(equipoId);
         
-        if (eliminado) {
-            return ResponseEntity.ok(Map.of("mensaje", "Mantenimiento " + id + " eliminado correctamente."));
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(Map.of("mensaje", "No existe un mantenimiento con ID " + id + "."));
+        // CORRECCIÓN: Si devuelve false, significa que el equipo no tenía mantenimientos registrados.
+        // Respondemos con un 200 OK informativo en lugar de un 404 semánticamente confuso.
+        if (!eliminado) {
+            return ResponseEntity.ok(Map.of(
+                "mensaje", "El equipo con ID " + equipoId + " no tenía mantenimientos registrados."
+            ));
         }
+        
+        // Si devuelve true, se borraron exitosamente
+        return ResponseEntity.ok(Map.of(
+            "mensaje", "Mantenimientos eliminados para el equipo con ID " + equipoId
+        ));
     }
+
 
     // GET: Verificar si un equipo requiere mantenimiento preventivo
     @GetMapping("/equipo/{equipoId}/requiere")

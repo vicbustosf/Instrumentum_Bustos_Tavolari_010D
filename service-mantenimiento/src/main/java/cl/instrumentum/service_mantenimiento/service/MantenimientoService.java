@@ -35,8 +35,8 @@ public class MantenimientoService {
     }
  
     public Mantenimiento registrarMantenimiento(Mantenimiento mantenimiento) {
-            if (mantenimiento.getEquipoId() == null) 
-                throw new RuntimeException();
+            if (mantenimiento.getEquipoId() == null)
+                throw new RuntimeException("El ID del equipo no puede ser nulo.");
 
         validarEquipo(mantenimiento.getEquipoId());
             if (mantenimiento.getFecha() == null) 

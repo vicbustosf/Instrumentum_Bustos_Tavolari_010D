@@ -22,9 +22,9 @@ public class EspecsController {
     @Autowired
     private SpecsService specsService;
 
-    // ==========================================
-    // ===          INSTRUMENTOS              ===
-    // ==========================================
+    // 
+    //           INSTRUMENTOS              
+    // 
 
     @GetMapping("/instrumento/{equipoId}")
     public ResponseEntity<Map<String, Object>> obtenerInstrumento(@PathVariable Long equipoId) {
@@ -35,15 +35,15 @@ public class EspecsController {
                         .body(Map.<String, Object>of("mensaje", "No existen especificaciones de instrumento para el equipo con ID " + equipoId + ".")));
     }
 
-    @PostMapping("/instrumento/{equipoId}")
-    public ResponseEntity<Map<String, Object>> crearInstrumento(
-            @PathVariable Long equipoId, 
-            @Valid @RequestBody EspecificacionInstrumento ins) {
-        
-        // Se llama pasándole el ID de la URL y el cuerpo del JSON según la firma de tu Service
-        EspecificacionInstrumento nuevo = specsService.guardarInstrumento(equipoId, ins);
+    //el simbolo "?" es para indicar que el cuerpo de la respuesta puede ser de cualquier tipo,
+    @PostMapping("/electronica/{equipoId}")
+    public ResponseEntity<?> guardarElectronica(@PathVariable Long equipoId, @RequestBody EspecificacionElectronica specs) {
+        if (specsService.obtenerElectronicaPorId(equipoId).isPresent()) {
+                return ResponseEntity.status(HttpStatus.CONFLICT)
+                        .body(Map.of("mensaje", "Ya existen specs para equipo " + equipoId ));
+        }
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(Map.<String, Object>of("mensaje", "Especificación de instrumento creada correctamente.", "especificacion", nuevo));
+                .body(Map.<String, Object>of("mensaje", "Especificación de instrumento creada correctamente."));
     }
 
     @PutMapping("/instrumento/{equipoId}")
@@ -63,7 +63,6 @@ public class EspecsController {
 
     // ==========================================
     // ===           ELECTRÓNICA              ===
-    // ==========================================
 
     @GetMapping("/electronica/{equipoId}")
     public ResponseEntity<Map<String, Object>> obtenerElectronica(@PathVariable Long equipoId) {
@@ -101,7 +100,7 @@ public class EspecsController {
 
     // ==========================================
     // ===        MÉTODOS AUXILIARES          ===
-    // ==========================================
+    
 
     @DeleteMapping("/equipo/{equipoId}")
     public ResponseEntity<Map<String, String>> eliminarPorEquipo(@PathVariable Long equipoId) {

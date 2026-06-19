@@ -41,12 +41,17 @@ public class GiraService {
 
     // Valida que el evento exista en service-evento (Asumiendo puerto 8086, ajusta si es otro)
     private void validarEvento(Long idEvento) {
-        webClientBuilder.build()
-                .get()
-                .uri("http://localhost:8086/api/v2/eventos/" + idEvento)
-                .retrieve()
-                .toBodilessEntity()
-                .block();
+        try {
+            webClientBuilder.build()
+                    .get()
+                    .uri("http://localhost:8086/api/v2/eventos/" + idEvento)
+                    .retrieve()
+                    .toBodilessEntity()
+                    .block();
+        } catch (Exception e) {
+            // Captura el error en caso de que service-evento no responda o devuelva 404
+            throw new RuntimeException("El evento con ID " + idEvento + " no existe o service-evento no responde.");
+        }
     }
 
     //       GESTIÓN DE GIRAS   
@@ -105,26 +110,50 @@ public class GiraService {
         return paradaRepository.findById(id);
     }
 
-    public ParadaGira guardarParada(ParadaGira parada) {
-        if (!giraRepository.existsById(parada.getIdGira())) {
-            throw new RuntimeException("La gira con ID " + parada.getIdGira() + " no existe.");
+   public ParadaGira guardarParada(ParadaGira parada) {
+        // 1. Validamos que el objeto Gira asociado no venga nulo y tenga un ID válido
+        if (parada.getGira() == null || parada.getGira().getIdGira() == null) {
+            throw new RuntimeException("El ID de la gira es obligatorio para registrar la parada.");
         }
+
+        Long idGira = parada.getGira().getIdGira();
+
+        // 2. Buscamos la Gira real en la base de datos para establecer el vínculo físico obligatorio
+        Gira giraExistente = giraRepository.findById(idGira)
+                .orElseThrow(() -> new RuntimeException("La gira con ID " + idGira + " no existe."));
+
+        // 3. Validamos de forma lógica que el evento externo exista vía WebClient
         validarEvento(parada.getIdEvento());
+
+        // 4. Seteamos la entidad gestionada por JPA a la parada para que se guarde la Foreign Key correctamente
+        parada.setGira(giraExistente);
+
         return paradaRepository.save(parada);
     }
 
     public ParadaGira actualizarParada(Long id, ParadaGira paradaActualizada) {
-        return paradaRepository.findById(id)
-                .map(parada -> {
-                    if (!giraRepository.existsById(paradaActualizada.getIdGira())) {
-                        throw new RuntimeException("La gira con ID " + paradaActualizada.getIdGira() + " no existe.");
+        return paradaRepository.findById(id).map(parada -> {
+            // 1. Validamos que los datos de la Gira en la actualización sean correctos
+            if (paradaActualizada.getGira() == null || paradaActualizada.getGira().getIdGira() == null) {
+                    throw new RuntimeException("El ID de la gira es obligatorio para actualizar la parada.");
                     }
-                    validarEvento(paradaActualizada.getIdEvento()); // Valida por si cambiaron el evento asociado
-                    parada.setIdGira(paradaActualizada.getIdGira());
+
+            Long idGiraNueva = paradaActualizada.getGira().getIdGira();
+
+            // 2. Si cambiaron la parada a otra Gira distinta, buscamos la nueva Gira para verificar que exista
+                Gira giraNueva = giraRepository.findById(idGiraNueva)
+                    .orElseThrow(() -> new RuntimeException("La gira con ID " + idGiraNueva + " no existe."));
+
+            // 3. Validamos que el evento externo siga existiendo (por si fue modificado)
+            validarEvento(paradaActualizada.getIdEvento());
+
+            // 4. Actualizamos los campos utilizando la nueva estructura de objetos
+                    parada.setGira(giraNueva); // Reemplaza al antiguo .setIdGira()
                     parada.setIdEvento(paradaActualizada.getIdEvento());
                     parada.setCiudad(paradaActualizada.getCiudad());
                     parada.setAlojamiento(paradaActualizada.getAlojamiento());
                     parada.setTransporte(paradaActualizada.getTransporte());
+
                     return paradaRepository.save(parada);
                 })
                 .orElse(null);

@@ -12,6 +12,8 @@ spring:
           predicates:
             - Path=/api/v2/usuarios/**, /api/v2/bandas/**
 
+        # IMPORTANTE: service-rig-equipos debe ir ANTES de service-inventario
+        # para que capture la subruta /en-cancion/** y no sea interceptada globalmente.
         - id: service-rig-equipos
           uri: http://localhost:8085
           predicates:

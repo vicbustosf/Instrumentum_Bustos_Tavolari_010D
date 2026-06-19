@@ -3,6 +3,7 @@ package cl.instrumentum.service_evento.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -28,7 +29,9 @@ public class Evento {
     @NotNull(message = "La fecha del evento no puede quedar en blanco")
     private LocalDate fecha;
 
-    // IDs de canciones separados por coma, ej: "1,4,7"
-    @NotBlank(message = "Deben especificarse las id de las canciones para el evento")
+    @NotNull(message = "Las canciones son obligatorias")
+    @NotBlank(message = "Las canciones no pueden estar vacías")
+    @Pattern(regexp = "^\\d+(,\\d+)*$", message = "Las canciones deben ser IDs numéricos separados por comas (ej: 1,4,7)")
+    @Column(name = "canciones", nullable = false)
     private String canciones;
 }
