@@ -3,15 +3,16 @@ package cl.instrumentum.service_rig.service;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+
 import cl.instrumentum.service_rig.model.Cancion;
 import cl.instrumentum.service_rig.model.EquipoCancion;
 import cl.instrumentum.service_rig.repository.CancionRepository;
 import cl.instrumentum.service_rig.repository.EquipoCancionRepository;
-import jakarta.annotation.PostConstruct;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class RigService {
@@ -25,48 +26,30 @@ public class RigService {
     @Autowired
     private WebClient.Builder webClientBuilder;
 
-    @PostConstruct
-    public void cargarDatosPrueba() {
-        if (cancionRepository.count() > 0) return;
-
-        
-        Cancion cancion1 = new Cancion(null, "Mi Primera Cancion", 1L, 180, new java.util.ArrayList<>());
-        cancion1 = cancionRepository.save(cancion1);
-        equipoCancionRepository.save(new EquipoCancion(null, cancion1, 1L, 1, "Volumen 7, Tonos al maximo"));
-
-       
-        Cancion cancion2 = new Cancion(null, "Riff del Verano", 1L, 195, new java.util.ArrayList<>());
-        cancion2 = cancionRepository.save(cancion2);
-        equipoCancionRepository.save(new EquipoCancion(null, cancion2, 1L, 1, "Volumen 7, Gain 5, Treble 8"));
-        equipoCancionRepository.save(new EquipoCancion(null, cancion2, 4L, 2, "Volumen 8, Graves al maximo"));
-    }
-
     private void validarBanda(Long bandaId) {
-        webClientBuilder.build()
-                .get()
-                .uri("http://localhost:8081/api/v1/bandas/" + bandaId)
-                .retrieve()
-                .toBodilessEntity()
-                .block();
+        try {
+            webClientBuilder.build()
+                    .get()
+                    .uri("http://localhost:8081/api/v2/bandas/" + bandaId)
+                    .retrieve()
+                    .toBodilessEntity()
+                    .block();
+        } catch (Exception e) {
+            throw new RuntimeException("La banda con ID " + bandaId + " no existe o el módulo de usuarios no responde.");
+        }
     }
 
     private void validarEquipo(Long equipoId) {
-        webClientBuilder.build()
-                .get()
-                .uri("http://localhost:8082/api/v1/equipos/" + equipoId)
-                .retrieve()
-                .toBodilessEntity()
-                .block();
-    }
-
-    public Cancion crearCancion(Cancion cancion) {
-        if (cancion.getBandaId() == null)
-        {
-            throw new RuntimeException();
+        try {
+            webClientBuilder.build()
+                    .get()
+                    .uri("http://localhost:8082/api/v2/equipos/" + equipoId)
+                    .retrieve()
+                    .toBodilessEntity()
+                    .block();
+        } catch (Exception e) {
+            throw new RuntimeException("El equipo con ID " + equipoId + " no existe o el módulo de inventario no responde.");
         }
-
-        validarBanda(cancion.getBandaId());
-        return cancionRepository.save(cancion);
     }
 
     public List<Cancion> listarCancionesPorBanda(Long bandaId) {
@@ -77,22 +60,37 @@ public class RigService {
         return cancionRepository.findById(id);
     }
 
-    public Cancion actualizarCancion(Cancion cancion) {
+    public Cancion guardarCancion(Cancion cancion) {
+        if (cancion.getBandaId() != null) {
+            validarBanda(cancion.getBandaId());
+        }
         return cancionRepository.save(cancion);
     }
 
-    // El transactional sirve para que si algo falla en el proceso de eliminación, 
-    // se revierta toda la operación y no quede nada a medias
-    @Transactional
-    public void eliminarCancion(Long cancionId) {
-        Cancion cancion = cancionRepository.findById(cancionId).orElseThrow(RuntimeException::new);
-        cancionRepository.delete(cancion);
+    public boolean equipoEstaEnAlgunaCancion(Long equipoId) {
+    return equipoCancionRepository.existsByEquipoId(equipoId);
+}
+
+    public boolean eliminarCancion(Long id) {
+        if (cancionRepository.existsById(id)) {
+            cancionRepository.deleteById(id);
+            return true;
+        }
+        return false;
+    }
+
+    public Optional<EquipoCancion> buscarEquipoCancion(Cancion cancion, Long equipoId) {
+        return equipoCancionRepository.findByCancionAndEquipoId(cancion, equipoId);
     }
 
     @Transactional
-    public EquipoCancion asignarEquipo(Long cancionId, Long equipoId, Integer posicion, String seteoPerillas) {
-        Cancion cancion = cancionRepository.findById(cancionId).orElseThrow(RuntimeException::new);
+    public EquipoCancion asignarEquipo(Cancion cancion, Long equipoId, Integer posicion, String seteoPerillas) {
         validarEquipo(equipoId);
+        
+        if (equipoCancionRepository.findByCancionAndEquipoId(cancion, equipoId).isPresent()) {
+            throw new RuntimeException("El equipo ya se encuentra asignado a esta canción.");
+        }
+
         EquipoCancion ec = new EquipoCancion();
         ec.setCancion(cancion);
         ec.setEquipoId(equipoId);
@@ -101,32 +99,26 @@ public class RigService {
         return equipoCancionRepository.save(ec);
     }
 
-    
-    @Transactional
-    public EquipoCancion actualizarEquipo(Long cancionId, Long equipoId, Integer posicion, String seteoPerillas) {
-        Cancion cancion = cancionRepository.findById(cancionId).orElseThrow(RuntimeException::new);
-        EquipoCancion ec = equipoCancionRepository.findByCancionAndEquipoId(cancion, equipoId)
-                .orElseThrow(RuntimeException::new);
-        if (posicion != null) ec.setPosicion(posicion);
-        if (seteoPerillas != null) ec.setSeteoPerillas(seteoPerillas);
+    public EquipoCancion guardarEquipoCancion(EquipoCancion ec) {
         return equipoCancionRepository.save(ec);
     }
 
     @Transactional
-    public void removerEquipo(Long cancionId, Long equipoId) {
-        Cancion cancion = cancionRepository.findById(cancionId).orElseThrow(RuntimeException::new);
-        EquipoCancion ec = equipoCancionRepository.findByCancionAndEquipoId(cancion, equipoId)
-                .orElseThrow(RuntimeException::new);
-        equipoCancionRepository.delete(ec);
-    }
-
-    public boolean equipoEstaEnAlgunaCancion(Long equipoId) {
-        return equipoCancionRepository.existsByEquipoId(equipoId);
+    public boolean removerEquipo(Cancion cancion, Long equipoId) {
+        Optional<EquipoCancion> ecOpt = equipoCancionRepository.findByCancionAndEquipoId(cancion, equipoId);
+        if (ecOpt.isPresent()) {
+            equipoCancionRepository.delete(ecOpt.get());
+            return true;
+        }
+        return false;
     }
 
     public Map<String, Object> obtenerSetupCompleto(Long cancionId) {
-        Cancion cancion = cancionRepository.findById(cancionId).orElseThrow(RuntimeException::new);
-        List<EquipoCancion> equipos = equipoCancionRepository.findByCancionOrderByPosicionAsc(cancion);
-        return Map.of("cancion", cancion, "equipos", equipos);
+        return cancionRepository.findById(cancionId)
+                .map(cancion -> {
+                    List<EquipoCancion> equipos = equipoCancionRepository.findByCancionOrderByPosicionAsc(cancion);
+                    return Map.<String, Object>of("cancion", cancion, "equipos", equipos);
+                })
+                .orElseThrow(() -> new RuntimeException("No existe una canción con ID " + cancionId));
     }
 }

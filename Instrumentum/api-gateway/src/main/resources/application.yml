@@ -10,29 +10,46 @@ spring:
         - id: service-usuario
           uri: http://localhost:8081
           predicates:
-            - Path=/api/v1/usuarios/**, /api/v1/bandas/**
+            - Path=/api/v2/usuarios/**, /api/v2/bandas/**
 
+        # IMPORTANTE: service-rig-equipos debe ir ANTES de service-inventario
+        # para que capture la subruta /en-cancion/** y no sea interceptada globalmente.
         - id: service-rig-equipos
           uri: http://localhost:8085
           predicates:
-            - Path=/api/v1/equipos/en-cancion/**
+            - Path=/api/v2/equipos/en-cancion/**
 
         - id: service-inventario
           uri: http://localhost:8082
           predicates:
-            - Path=/api/v1/equipos/**, /api/v1/marcas/**, /api/v1/categorias/**
+            - Path=/api/v2/equipos/**, /api/v2/marcas/**, /api/v2/categorias/**
 
         - id: service-specs
           uri: http://localhost:8083
           predicates:
-            - Path=/api/v1/especs/**
+            - Path=/api/v2/especs/**
 
         - id: service-mantenimiento
           uri: http://localhost:8084
           predicates:
-            - Path=/api/v1/mantenimientos/**
+            - Path=/api/v2/mantenimientos/**
 
         - id: service-rig
           uri: http://localhost:8085
           predicates:
-            - Path=/api/v1/canciones/**
+            - Path=/api/v2/canciones/**
+
+        - id: service-evento
+          uri: http://localhost:8086
+          predicates:
+            - Path=/api/v2/eventos/**
+        
+        - id: service-finanza
+          uri: http://localhost:8087
+          predicates:
+            - Path=/api/v2/finanzas/**
+
+        - id: service-gira
+          uri: http://localhost:8088
+          predicates:
+            - Path=/api/v2/giras/**, /api/v2/paradas/**
