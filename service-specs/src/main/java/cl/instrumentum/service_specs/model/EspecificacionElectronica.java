@@ -14,21 +14,19 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class EspecificacionElectronica {
- 
+
     @Id
     @Column(name = "id_equipo")
-    // Quite @NotNull. El id viene del @PathVariable del controlador,
-    // no del body. Con @NotNull el validador rechazaba el request con 400.
     private Long idEquipo;
- 
+
     @NotBlank(message = "El voltaje es obligatorio")
     private String voltaje;
- 
+
     @NotNull(message = "El consumo es obligatorio")
     @Positive(message = "El consumo debe ser mayor a cero")
     private Double consumo;
 
-    @NotBlank
+    @NotBlank(message = "El tipo de circuito es obligatorio")
     @Column(name = "tipo_circuito")
     private String tipoCircuito;
 }

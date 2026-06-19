@@ -26,7 +26,7 @@ public class Evento {
     @NotBlank(message = "El nombre del evento es obligatorio")
     private String nombre;
 
-    @NotNull(message = "La fecha del evento no puede quedar en blanco")
+    @NotNull(message = "La fecha del evento es obligatoria")
     private LocalDate fecha;
 
     @NotNull(message = "Las canciones son obligatorias")

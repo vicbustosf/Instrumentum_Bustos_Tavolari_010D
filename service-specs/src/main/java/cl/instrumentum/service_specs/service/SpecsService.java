@@ -52,21 +52,10 @@ public class SpecsService {
         return elec.orElse(null);
     }
 
-    // CORRECCIÓN PROBLEMA 2: Se reemplaza deleteById() por findById().ifPresent(repo::delete).
-    //
-    // El problema original era que deleteById() en Spring Data JPA lanza
-    // EmptyResultDataAccessException si el registro no existe, causando un 500.
-    // Un equipo solo puede ser INSTRUMENTO o ELECTRONICO, nunca ambos, por lo tanto
-    // siempre uno de los dos repositorios no va a encontrar nada.
-    //
-    // Con ifPresent(), si no existe el registro simplemente no hace nada,
-    // en vez de explotar con una excepción.
+    
     public void eliminarPorEquipoId(Long equipoId) {
-        instrumentoRepository.findById(equipoId)
-                .ifPresent(instrumentoRepository::delete);
-
-        electronicaRepository.findById(equipoId)
-                .ifPresent(electronicaRepository::delete);
+        instrumentoRepository.findById(equipoId).ifPresent(instrumentoRepository::delete);
+        electronicaRepository.findById(equipoId).ifPresent(electronicaRepository::delete);
     }
 
     public Optional<EspecificacionInstrumento> obtenerInstrumentoPorId(Long equipoId) {

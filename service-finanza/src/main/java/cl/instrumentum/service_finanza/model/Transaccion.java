@@ -9,6 +9,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -24,18 +25,19 @@ public class Transaccion {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idTransaccion;
 
-    @NotNull
+    @NotNull(message = "El id de la banda es obligatoria")
     private Long idBanda;
 
-    @NotBlank
+    @NotBlank(message = "Debe ingresar el tipo de movimiento (ingreso o egreso)")
     private String tipoMovimiento;
 
-    @NotNull
+    @NotNull(message = "El monto es obligatorio")
+
     private Double monto;
-
-    @NotNull
+    
+    @NotNull(message = "La fecha es obligatoria")
     private LocalDate fecha;
-
-    @NotBlank
+    
+    @NotBlank(message = "La descripción es obligatoria")
     private String descripcion;
 }

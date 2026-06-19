@@ -27,6 +27,11 @@ public class UsuarioService {
     }
 
     public Usuario guardarUsuario(Usuario usuario) {
+        if (usuario.getBanda() != null && usuario.getBanda().getIdBanda() != null) {
+            Banda banda = bandaRepository.findById(usuario.getBanda().getIdBanda())
+                    .orElseThrow(() -> new RuntimeException("La banda no existe."));
+            usuario.setBanda(banda);
+        }
         return usuarioRepository.save(usuario);
     }
 
@@ -40,7 +45,7 @@ public class UsuarioService {
     }
 
     public List<Usuario> usuariosPorBanda(Long idBanda) {
-        return usuarioRepository.findByIdBanda(idBanda);
+        return usuarioRepository.findAllByBandaId(idBanda);
     }
 
     public List<Banda> listarBandas() {
@@ -61,7 +66,7 @@ public class UsuarioService {
         if (bandaRepository.existsById(id)) {
             
             // 1. Verificamos si hay usuarios que pertenezcan a esta banda
-            List<Usuario> usuariosAsociados = usuarioRepository.findByIdBanda(id);
+            List<Usuario> usuariosAsociados = usuarioRepository.findAllByBandaId(id);
             
             // 2. Si la lista no está vacía, frenamos la eliminación con una excepción clara
             if (!usuariosAsociados.isEmpty()) {

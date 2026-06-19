@@ -37,13 +37,17 @@ public class EspecsController {
 
     //el simbolo "?" es para indicar que el cuerpo de la respuesta puede ser de cualquier tipo,
     @PostMapping("/electronica/{equipoId}")
-    public ResponseEntity<?> guardarElectronica(@PathVariable Long equipoId, @RequestBody EspecificacionElectronica specs) {
+    public ResponseEntity<Map<String, Object>> guardarElectronica(@PathVariable Long equipoId,
+                                                       @Valid @RequestBody EspecificacionElectronica specs) {
+
         if (specsService.obtenerElectronicaPorId(equipoId).isPresent()) {
                 return ResponseEntity.status(HttpStatus.CONFLICT)
-                        .body(Map.of("mensaje", "Ya existen specs para equipo " + equipoId ));
+                        .body(Map.of("mensaje", "Ya existen especificaciones electrónicas para el equipo " + equipoId + "."));
         }
+
+        EspecificacionElectronica nueva = specsService.guardarElectronica(equipoId, specs);
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(Map.<String, Object>of("mensaje", "Especificación de instrumento creada correctamente."));
+                .body(Map.of("mensaje", "Especificación electrónica creada correctamente.", "especificacion", nueva));
     }
 
     @PutMapping("/instrumento/{equipoId}")
