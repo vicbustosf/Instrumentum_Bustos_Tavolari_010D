@@ -43,7 +43,7 @@ public class MerchandisingService {
         try {
             webClientBuilder.build()
                     .get()
-                    .uri("http://localhost:8081/api/v1/bandas/" + idBanda)
+                    .uri("http://localhost:8081/api/v2/bandas/" + idBanda)
                     .retrieve()
                     .toBodilessEntity()
                     .block();
@@ -59,7 +59,7 @@ public class MerchandisingService {
         try {
             webClientBuilder.build()
                     .get()
-                    .uri("http://localhost:8086/api/v1/eventos/" + idEvento)
+                    .uri("http://localhost:8086/api/v2/evento/" + idEvento)
                     .retrieve()
                     .toBodilessEntity()
                     .block();
@@ -186,8 +186,4 @@ public class MerchandisingService {
 }
 //
 
-/* METODOS POR HACER:
-
-1. Permite saber qué se vendió, cuánto dinero recaudó y opcionalmente asociar esa venta al concierto específico donde se instaló el stand de mercancía.
-
-*/
+/* metodo por hacer: Permite saber qué se vendió, cuánto dinero recaudó y opcionalmente asociar esa venta al concierto específico donde se instaló el stand de mercancía.*/

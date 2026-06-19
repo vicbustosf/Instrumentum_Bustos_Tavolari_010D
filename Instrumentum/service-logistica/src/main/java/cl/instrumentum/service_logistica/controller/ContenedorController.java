@@ -15,7 +15,7 @@ import java.util.Map;
 
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/api/v1/logistica")
+@RequestMapping("/api/v2/logistica")
 @Tag(name = "Logistica", description = "Gestion de contenedores y empaque de equipos para shows")
 public class ContenedorController {
 

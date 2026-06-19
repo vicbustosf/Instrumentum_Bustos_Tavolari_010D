@@ -44,7 +44,7 @@ public class LogisticaService {
         try {
             webClientBuilder.build()
                     .get()
-                    .uri("http://localhost:8081/api/v1/bandas/" + idBanda)
+                    .uri("http://localhost:8081/api/v2/bandas/" + idBanda)
                     .retrieve()
                     .toBodilessEntity()
                     .block();
@@ -59,7 +59,7 @@ public class LogisticaService {
         try {
             webClientBuilder.build()
                     .get()
-                    .uri("http://localhost:8082/api/v1/equipos/" + idEquipo)
+                    .uri("http://localhost:8082/api/v2/equipos/" + idEquipo)
                     .retrieve()
                     .bodyToMono(Object.class)
                     .block();
