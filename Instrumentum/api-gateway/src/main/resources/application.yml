@@ -1,6 +1,9 @@
 server:
   port: 8181
 
+jwt:
+  secret: "493358340235739058340598340598340598340598340598"
+
 spring:
   application:
     name: api-gateway
@@ -18,51 +21,74 @@ spring:
               - OPTIONS
             allowedHeaders: "*"
       routes:
+        #---- Microservicio auth ----
+        - id: service-auth
+          uri: http://localhost:8089
+          predicates:
+            - Path=/auth/**
+
         - id: service-usuario
           uri: http://localhost:8081
           predicates:
             - Path=/api/v1/usuarios/**, /api/v1/bandas/**
+          filters:
+            - AuthFilter
 
         - id: service-rig-equipos
           uri: http://localhost:8085
           predicates:
             - Path=/api/v1/equipos/en-cancion/**
+          filters:
+            - AuthFilter
 
         - id: service-inventario
           uri: http://localhost:8082
           predicates:
             - Path=/api/v1/equipos/**, /api/v1/marcas/**, /api/v1/categorias/**
+          filters:
+            - AuthFilter
 
         - id: service-specs
           uri: http://localhost:8083
           predicates:
             - Path=/api/v1/especs/**
+          filters:
+            - AuthFilter
 
         - id: service-mantenimiento
           uri: http://localhost:8084
           predicates:
             - Path=/api/v1/mantenimientos/**
+          filters:
+            - AuthFilter
 
         - id: service-rig
           uri: http://localhost:8085 
           predicates:
             - Path=/api/v1/canciones/**
+          filters:
+            - AuthFilter
 
         # --- Nuevos Microservicios ---
         - id: service-logistica
           uri: http://localhost:8090
           predicates:
             - Path=/api/v1/logistica/**
-
-        - id: logistica-docs
-          uri: http://localhost:8090
-          predicates:
-            - Path=/logistica/api-docs
+          filters:
+            - AuthFilter
 
         - id: service-merchandising
           uri: http://localhost:8091
           predicates:
             - Path=/api/v1/merchandising/**
+          filters:
+            - AuthFilter
+
+        # --- Rutas Docs ---
+        - id: logistica-docs
+          uri: http://localhost:8090 # Ver si se puede tener en el mismo puerto
+          predicates:
+            - Path=/logistica/api-docs
 
         - id: merchandising-docs
           uri: http://localhost:8091

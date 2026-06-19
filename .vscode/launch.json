@@ -39,7 +39,8 @@
             "mainClass": "cl.instrumentum.service_mantenimiento.ServiceMantenimientoApplication",
             "projectName": "service-mantenimiento",
             "args": "",
-            "envFile": "${workspaceFolder}/.env"
+            "envFile": "${workspaceFolder}/.env",
+            "vmArgs": " -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=55675 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dspring.jmx.enabled=true -Djava.rmi.server.hostname=localhost -Dspring.application.admin.enabled=true -Dspring.boot.project.name=service-mantenimiento"
         },
         {
             "type": "java",
@@ -49,7 +50,8 @@
             "mainClass": "cl.instrumentum.service_inventario.ServiceInventarioApplication",
             "projectName": "service-inventario",
             "args": "",
-            "envFile": "${workspaceFolder}/.env"
+            "envFile": "${workspaceFolder}/.env",
+            "vmArgs": " -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=50084 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dspring.jmx.enabled=true -Djava.rmi.server.hostname=localhost -Dspring.application.admin.enabled=true -Dspring.boot.project.name=service-inventario"
         },
         {
             "type": "java",
@@ -59,7 +61,8 @@
             "mainClass": "cl.instrumentum.api_gateway.ApiGatewayApplication",
             "projectName": "api-gateway",
             "args": "",
-            "envFile": "${workspaceFolder}/.env"
+            "envFile": "${workspaceFolder}/.env",
+            "vmArgs": " -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=49953 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dspring.jmx.enabled=true -Djava.rmi.server.hostname=localhost -Dspring.application.admin.enabled=true -Dspring.boot.project.name=api-gateway"
         },
         {
             "type": "java",
@@ -69,7 +72,8 @@
             "mainClass": "cl.instrumentum.service_auth.ServiceAuthApplication",
             "projectName": "service-auth",
             "args": "",
-            "envFile": "${workspaceFolder}/.env"
+            "envFile": "${workspaceFolder}/.env",
+            "vmArgs": " -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=49962 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dspring.jmx.enabled=true -Djava.rmi.server.hostname=localhost -Dspring.application.admin.enabled=true -Dspring.boot.project.name=service-auth"
         },
         {
             "type": "java",
@@ -78,6 +82,17 @@
             "cwd": "${workspaceFolder}",
             "mainClass": "cl.instrumentum.service_logistica.ServiceLogisticaApplication",
             "projectName": "service-logistica",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env",
+            "vmArgs": " -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=50158 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dspring.jmx.enabled=true -Djava.rmi.server.hostname=localhost -Dspring.application.admin.enabled=true -Dspring.boot.project.name=service-logistica"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-ServiceMerchandisingApplication<service-merchandising>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "cl.instrumentum.service_merchandising.ServiceMerchandisingApplication",
+            "projectName": "service-merchandising",
             "args": "",
             "envFile": "${workspaceFolder}/.env"
         }
