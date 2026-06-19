@@ -17,7 +17,7 @@ public class EspecificacionElectronica {
 
     @Id
     @Column(name = "id_equipo")
-    private Long idEquipo;
+    private Long idEquipo; // Sin @NotNull para evitar rechazos 400 en el @Valid del Controller
 
     @NotBlank(message = "El voltaje es obligatorio")
     private String voltaje;
@@ -30,4 +30,3 @@ public class EspecificacionElectronica {
     @Column(name = "tipo_circuito")
     private String tipoCircuito;
 }
- 

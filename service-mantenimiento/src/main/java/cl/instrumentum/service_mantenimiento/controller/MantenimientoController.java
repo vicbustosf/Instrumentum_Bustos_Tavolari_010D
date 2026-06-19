@@ -67,33 +67,39 @@ public class MantenimientoController {
                         .body(Map.<String, Object>of("mensaje", "No existe un mantenimiento con ID " + id + ".")));
     }
 
-    // DELETE: Eliminar TODOS los mantenimientos asociados a un equipo
+    
+    //DELETE: Eliminar TODOS los mantenimientos asociados a un equipo
     @DeleteMapping("/equipo/{equipoId}")
-    public ResponseEntity<Map<String, String>> eliminarPorEquipo(@PathVariable Long equipoId) {
-        boolean eliminado = mantenimientoService.eliminarMantenimiento(equipoId);
-        if (!eliminado) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(Map.of("mensaje", "No existen mantenimientos registrados para el equipo con ID " + equipoId + "."));
-        }
-        return ResponseEntity.ok(Map.of("mensaje", "Mantenimientos eliminados correctamente para el equipo con ID " + equipoId + "."));
-    }
-
-    // DELETE: Eliminar un mantenimiento específico por su ID
-    @DeleteMapping("/equipo/{equipoId}")
-    public ResponseEntity<Map<String, String>> eliminarMantenimiento(@PathVariable Long equipoId) {
+    public ResponseEntity<Map<String, String>> eliminarMantenimientoPorEquipo(@PathVariable Long equipoId) {
+        // Llama al método del service que borra todos los registros de un equipo
         boolean eliminado = mantenimientoService.eliminarMantenimiento(equipoId);
         
-        // CORRECCIÓN: Si devuelve false, significa que el equipo no tenía mantenimientos registrados.
-        // Respondemos con un 200 OK informativo en lugar de un 404 semánticamente confuso.
+        // Semántica correcta: 200 OK si estaba vacío
         if (!eliminado) {
             return ResponseEntity.ok(Map.of(
                 "mensaje", "El equipo con ID " + equipoId + " no tenía mantenimientos registrados."
             ));
         }
         
-        // Si devuelve true, se borraron exitosamente
         return ResponseEntity.ok(Map.of(
-            "mensaje", "Mantenimientos eliminados para el equipo con ID " + equipoId
+            "mensaje", "Todos los mantenimientos fueron eliminados para el equipo con ID " + equipoId
+        ));
+    }
+
+    
+    // DELETE: Eliminar UN mantenimiento específico por su ID de registro
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Map<String, String>> eliminarMantenimientoPorId(@PathVariable Long id) {
+        // Llama al método del service que borra un registro individual
+        boolean eliminado = mantenimientoService.eliminarMantenimientoPorId(id);
+        
+        if (!eliminado) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("mensaje", "No existe un registro de mantenimiento con ID " + id));
+        }
+        
+        return ResponseEntity.ok(Map.of(
+            "mensaje", "Registro de mantenimiento eliminado correctamente."
         ));
     }
 

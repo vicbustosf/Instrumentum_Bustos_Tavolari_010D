@@ -1,7 +1,7 @@
 package cl.instrumentum.service_specs.controller;
 
+import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,32 +22,42 @@ public class EspecsController {
     @Autowired
     private SpecsService specsService;
 
-    // 
-    //           INSTRUMENTOS              
-    // 
+    // ==========================================
+    // ===           INSTRUMENTOS             ===
+    // ==========================================
 
     @GetMapping("/instrumento/{equipoId}")
     public ResponseEntity<Map<String, Object>> obtenerInstrumento(@PathVariable Long equipoId) {
         return specsService.obtenerInstrumentoPorId(equipoId)
-                .map(i -> ResponseEntity.ok(
-                        Map.<String, Object>of("mensaje", "Especificación de instrumento encontrada correctamente.", "especificacion", i)))
+                .map(i -> {
+                    Map<String, Object> response = new HashMap<>();
+                    response.put("mensaje", "Especificación de instrumento encontrada correctamente.");
+                    response.put("especificacion", i);
+                    return ResponseEntity.ok(response);
+                })
                 .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND)
-                        .body(Map.<String, Object>of("mensaje", "No existen especificaciones de instrumento para el equipo con ID " + equipoId + ".")));
+                        .body(Map.of("mensaje", "No existen especificaciones de instrumento para el equipo con ID " + equipoId + ".")));
     }
 
-    //el simbolo "?" es para indicar que el cuerpo de la respuesta puede ser de cualquier tipo,
-    @PostMapping("/electronica/{equipoId}")
-    public ResponseEntity<Map<String, Object>> guardarElectronica(@PathVariable Long equipoId,
-                                                       @Valid @RequestBody EspecificacionElectronica specs) {
+    @PostMapping("/instrumento/{equipoId}")
+    public ResponseEntity<Map<String, Object>> crearInstrumento(
+            @PathVariable Long equipoId,
+            @Valid @RequestBody EspecificacionInstrumento specs) {
 
-        if (specsService.obtenerElectronicaPorId(equipoId).isPresent()) {
-                return ResponseEntity.status(HttpStatus.CONFLICT)
-                        .body(Map.of("mensaje", "Ya existen especificaciones electrónicas para el equipo " + equipoId + "."));
+        if (specsService.obtenerInstrumentoPorId(equipoId).isPresent()) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(Map.of("mensaje", "Ya existen especificaciones de instrumento para el equipo " + equipoId + ". Usa PUT."));
         }
 
-        EspecificacionElectronica nueva = specsService.guardarElectronica(equipoId, specs);
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(Map.of("mensaje", "Especificación electrónica creada correctamente.", "especificacion", nueva));
+        // SEGURIDAD: Sincronizar URL con Body
+        specs.setIdEquipo(equipoId);
+        
+        EspecificacionInstrumento nueva = specsService.guardarInstrumento(equipoId, specs);
+        
+        Map<String, Object> response = new HashMap<>();
+        response.put("mensaje", "Especificación de instrumento creada correctamente.");
+        response.put("especificacion", nueva);
+                return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @PutMapping("/instrumento/{equipoId}")
@@ -57,34 +67,56 @@ public class EspecsController {
         
         return specsService.obtenerInstrumentoPorId(equipoId)
                 .map(existente -> {
+                    // SEGURIDAD: Sincronizar URL con Body
+                    ins.setIdEquipo(equipoId);
+                    
                     EspecificacionInstrumento actualizada = specsService.guardarInstrumento(equipoId, ins);
-                    return ResponseEntity.ok(
-                            Map.<String, Object>of("mensaje", "Especificación de instrumento actualizada correctamente.", "especificacion", actualizada));
+                    
+                    Map<String, Object> response = new HashMap<>();
+                    response.put("mensaje", "Especificación de instrumento actualizada correctamente.");
+                    response.put("especificacion", actualizada);
+                        return ResponseEntity.ok(response);
                 })
                 .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND)
-                        .body(Map.<String, Object>of("mensaje", "No existen especificaciones de instrumento para el equipo con ID " + equipoId + ".")));
+                        .body(Map.of("mensaje", "No existen especificaciones de instrumento para el equipo con ID " + equipoId + ".")));
     }
 
     // ==========================================
     // ===           ELECTRÓNICA              ===
+    // ==========================================
 
     @GetMapping("/electronica/{equipoId}")
     public ResponseEntity<Map<String, Object>> obtenerElectronica(@PathVariable Long equipoId) {
         return specsService.obtenerElectronicaPorId(equipoId)
-                .map(el -> ResponseEntity.ok(
-                        Map.<String, Object>of("mensaje", "Especificación electrónica encontrada correctamente.", "especificacion", el)))
+                .map(el -> {
+                    Map<String, Object> response = new HashMap<>();
+                    response.put("mensaje", "Especificación electrónica encontrada correctamente.");
+                    response.put("especificacion", el);
+                        return ResponseEntity.ok(response);
+                })
                 .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND)
-                        .body(Map.<String, Object>of("mensaje", "No existen especificaciones electrónicas para el equipo con ID " + equipoId + ".")));
+                        .body(Map.of("mensaje", "No existen especificaciones electrónicas para el equipo con ID " + equipoId + ".")));
     }
 
     @PostMapping("/electronica/{equipoId}")
     public ResponseEntity<Map<String, Object>> crearElectronica(
             @PathVariable Long equipoId, 
             @Valid @RequestBody EspecificacionElectronica el) {
+
+        if (specsService.obtenerElectronicaPorId(equipoId).isPresent()) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(Map.of("mensaje", "Ya existen especificaciones electrónicas para el equipo " + equipoId + ". Usa PUT."));
+        }
+
+        // SEGURIDAD: Sincronizar URL con Body
+        el.setIdEquipo(equipoId);
         
         EspecificacionElectronica nueva = specsService.guardarElectronica(equipoId, el);
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(Map.<String, Object>of("mensaje", "Especificación electrónica creada correctamente.", "especificacion", nueva));
+        
+        Map<String, Object> response = new HashMap<>();
+        response.put("mensaje", "Especificación electrónica creada correctamente.");
+        response.put("especificacion", nueva);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @PutMapping("/electronica/{equipoId}")
@@ -94,29 +126,34 @@ public class EspecsController {
         
         return specsService.obtenerElectronicaPorId(equipoId)
                 .map(existente -> {
+                    // SEGURIDAD: Sincronizar URL con Body
+                    el.setIdEquipo(equipoId);
+                    
                     EspecificacionElectronica actualizada = specsService.guardarElectronica(equipoId, el);
-                    return ResponseEntity.ok(
-                            Map.<String, Object>of("mensaje", "Especificación electrónica actualizada correctamente.", "especificacion", actualizada));
+                    
+                    Map<String, Object> response = new HashMap<>();
+                    response.put("mensaje", "Especificación electrónica actualizada correctamente.");
+                    response.put("especificacion", actualizada);
+                        return ResponseEntity.ok(response);
                 })
                 .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND)
-                        .body(Map.<String, Object>of("mensaje", "No existen especificaciones electrónicas para el equipo con ID " + equipoId + ".")));
+                        .body(Map.of("mensaje", "No existen especificaciones electrónicas para el equipo con ID " + equipoId + ".")));
     }
 
     // ==========================================
     // ===        MÉTODOS AUXILIARES          ===
-    
+    // ==========================================
 
     @DeleteMapping("/equipo/{equipoId}")
     public ResponseEntity<Map<String, String>> eliminarPorEquipo(@PathVariable Long equipoId) {
         specsService.eliminarPorEquipoId(equipoId);
-        return ResponseEntity.ok(Map.of("mensaje", "Especificaciones eliminadas correctamente para el equipo con ID " + equipoId + "."));
+                return ResponseEntity.ok(Map.of("mensaje", "Especificaciones eliminadas correctamente para el equipo con ID " + equipoId + "."));
     }
 
-    // Interceptores automáticos de excepciones para atrapar fallos del WebClient y de Validaciones
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<Map<String, String>> handleRuntimeException(RuntimeException e) {
         String msg = e.getMessage() != null ? e.getMessage() : "Ocurrió un error inesperado en el módulo de especificaciones.";
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+               return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(Map.of("mensaje", "Error interno del servidor: " + msg));
     }
 
@@ -126,7 +163,7 @@ public class EspecsController {
                 .stream()
                 .map(fe -> fe.getField() + ": " + fe.getDefaultMessage())
                 .collect(Collectors.joining(", "));
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(Map.of("mensaje", "Error de validación: " + errores));
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body(Map.of("mensaje", "Error de validación: " + errores));
     }
 }

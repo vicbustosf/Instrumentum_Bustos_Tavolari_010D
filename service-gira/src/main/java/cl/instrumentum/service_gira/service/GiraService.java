@@ -91,7 +91,7 @@ public class GiraService {
     @Transactional
     public boolean eliminarGira(Long id) {
         if (giraRepository.existsById(id)) {
-            paradaRepository.deleteByIdGira(id); // Limpia las paradas asociadas primero
+            paradaRepository.obtenerPorIdGira(id); // Limpia las paradas asociadas primero
             giraRepository.deleteById(id);
             return true;
         }
@@ -103,7 +103,7 @@ public class GiraService {
     // 
 
     public List<ParadaGira> listarParadasPorGira(Long idGira) {
-        return paradaRepository.findByIdGira(idGira);
+        return paradaRepository.obtenerPorIdGira(idGira);
     }
 
     public Optional<ParadaGira> buscarParadaPorId(Long id) {
