@@ -26,13 +26,15 @@ public class ContenedorController {
 
 // Crear contenedor
     @Operation(summary = "Crear un nuevo contenedor", description = "Registra un nuevo contenedor en la base de datos")
+    // DESPUÉS
     @PostMapping
-    public ResponseEntity<String> crear(@Valid @RequestBody Contenedor contenedor) {
+    public ResponseEntity<Map<String, Object>> crear(@Valid @RequestBody Contenedor contenedor) {
         try {
-            logisticaService.crearContenedor(contenedor);
-            return ResponseEntity.status(HttpStatus.CREATED).body("Contenedor registrado exitosamente");
+            Contenedor nuevo = logisticaService.crearContenedor(contenedor);
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body(Map.of("mensaje", "Contenedor registrado exitosamente", "contenedor", nuevo));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("mensaje", e.getMessage()));
         }
     }
 

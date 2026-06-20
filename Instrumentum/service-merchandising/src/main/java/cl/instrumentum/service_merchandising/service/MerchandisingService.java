@@ -24,19 +24,6 @@ public class MerchandisingService {
     @Autowired
     private WebClient.Builder webClientBuilder;
 
-    @PostConstruct
-    public void cargarDatosPrueba() {
-        if (productoMerchRepository.count() > 0) return;
-
-        ProductoMerch p1 = productoMerchRepository.save(
-            new ProductoMerch(null, 1L, "Polera Tour 2026", "Polera", 15000.0, 50));
-        ProductoMerch p2 = productoMerchRepository.save(
-            new ProductoMerch(null, 1L, "Disco Los Solos - Primer Álbum", "Disco", 12000.0, 30));
-
-        ventaMerchRepository.save(new VentaMerch(null, p1, 2, 30000.0, null));
-        ventaMerchRepository.save(new VentaMerch(null, p2, 1, 12000.0, 5L));
-    }
-
 // ---------------- Validar banda y evento ---------------- \\
 
     private void validarBanda(Long idBanda) {
@@ -59,7 +46,7 @@ public class MerchandisingService {
         try {
             webClientBuilder.build()
                     .get()
-                    .uri("http://localhost:8086/api/v2/evento/" + idEvento)
+                    .uri("http://localhost:8086/api/v2/eventos/" + idEvento)
                     .retrieve()
                     .toBodilessEntity()
                     .block();

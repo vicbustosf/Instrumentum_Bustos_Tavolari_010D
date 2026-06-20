@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import java.util.Map;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -25,13 +26,15 @@ public class MerchandisingController {
 
 // Crear producto
     @Operation(summary = "Crear un nuevo producto de merchandising", description = "Registra un nuevo producto en el inventario de la banda")
+    // DESPUÉS — crearProducto
     @PostMapping("/productos")
-    public ResponseEntity<String> crearProducto(@Valid @RequestBody ProductoMerch producto) {
+    public ResponseEntity<Map<String, Object>> crearProducto(@Valid @RequestBody ProductoMerch producto) {
         try {
-            merchandisingService.crearProducto(producto);
-            return ResponseEntity.status(HttpStatus.CREATED).body("Producto registrado exitosamente");
+            ProductoMerch nuevo = merchandisingService.crearProducto(producto);
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body(Map.of("mensaje", "Producto registrado exitosamente", "producto", nuevo));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("mensaje", e.getMessage()));
         }
     }
 

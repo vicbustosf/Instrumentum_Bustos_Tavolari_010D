@@ -16,8 +16,6 @@ public class EspecificacionInstrumento {
  
     @Id
     @Column(name = "id_equipo")
-    @NotNull(message = "El ID del equipo es obligatorio")
-    //LO mismo que en electronica
     private Long idEquipo;
  
     @NotBlank(message = "El tipo de madera del equipo es obligatorio")
