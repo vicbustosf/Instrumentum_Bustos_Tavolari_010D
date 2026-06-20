@@ -19,7 +19,8 @@
             "mainClass": "cl.instrumentum.service_specs.ServiceSpecsApplication",
             "projectName": "service-specs",
             "args": "",
-            "envFile": "${workspaceFolder}/.env"
+            "envFile": "${workspaceFolder}/.env",
+            "vmArgs": " -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=60012 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dspring.jmx.enabled=true -Djava.rmi.server.hostname=localhost -Dspring.application.admin.enabled=true -Dspring.boot.project.name=service-specs"
         },
         {
             "type": "java",
@@ -29,7 +30,8 @@
             "mainClass": "cl.instrumentum.service_rig.ServiceRigApplication",
             "projectName": "service-rig",
             "args": "",
-            "envFile": "${workspaceFolder}/.env"
+            "envFile": "${workspaceFolder}/.env",
+            "vmArgs": " -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=60038 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dspring.jmx.enabled=true -Djava.rmi.server.hostname=localhost -Dspring.application.admin.enabled=true -Dspring.boot.project.name=service-rig"
         },
         {
             "type": "java",
@@ -93,6 +95,37 @@
             "cwd": "${workspaceFolder}",
             "mainClass": "cl.instrumentum.service_merchandising.ServiceMerchandisingApplication",
             "projectName": "service-merchandising",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env",
+            "vmArgs": " -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=60064 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dspring.jmx.enabled=true -Djava.rmi.server.hostname=localhost -Dspring.application.admin.enabled=true -Dspring.boot.project.name=service-merchandising"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-ServiceGiraApplication<service-gira>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "cl.instrumentum.service_gira.ServiceGiraApplication",
+            "projectName": "service-gira",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-ServiceFinanzaApplication<service-finanza>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "cl.instrumentum.service_finanza.ServiceFinanzaApplication",
+            "projectName": "service-finanza",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-ServiceEventoApplication<service-eventos>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "cl.instrumentum.service_evento.ServiceEventoApplication",
+            "projectName": "service-eventos",
             "args": "",
             "envFile": "${workspaceFolder}/.env"
         }
