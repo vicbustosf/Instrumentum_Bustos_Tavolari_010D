@@ -1,0 +1,13 @@
+package cl.instrumentum.service_rig;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class ServiceRigApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(ServiceRigApplication.class, args);
+	}
+
+}
