@@ -24,9 +24,9 @@ public class VentaMerch {
     @NotNull
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_producto")
-    @Schema(description = "Producto vendido. Para crear la venta basta enviar el idProducto, ej: {\"idProducto\": 1}")
+    @Schema(description = "Producto vendido. Debes enviar el objeto anidado, ej: {\"producto\": {\"idProducto\": 1}}")
     private ProductoMerch producto;
-
+    
     @NotNull
     @Positive
     @Schema(description = "Cantidad de unidades vendidas", example = "2")

@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
+
 import cl.instrumentum.service_usuario.model.Banda;
 import cl.instrumentum.service_usuario.model.Usuario;
 import cl.instrumentum.service_usuario.repository.BandaRepository;
@@ -17,6 +19,9 @@ public class UsuarioService {
 
     @Autowired
     private BandaRepository bandaRepository;
+
+    @Autowired
+    private WebClient.Builder webClientBuilder;
 
     public List<Usuario> listarUsuarios() {
         return usuarioRepository.findAll();
@@ -65,19 +70,78 @@ public class UsuarioService {
     public boolean eliminarBanda(Long id) {
         if (bandaRepository.existsById(id)) {
             
-            // 1. Verificamos si hay usuarios que pertenezcan a esta banda
+            // 1. Regla de negocio: No borrar si hay usuarios adentro
             List<Usuario> usuariosAsociados = usuarioRepository.findAllByBandaId(id);
-            
-            // 2. Si la lista no está vacía, frenamos la eliminación con una excepción clara
             if (!usuariosAsociados.isEmpty()) {
-                throw new RuntimeException("Conflicto de integridad: No se puede eliminar la banda con ID " 
-                        + id + " porque tiene " + usuariosAsociados.size() + " usuario(s) vinculado(s).");
+                throw new RuntimeException("No se puede eliminar la banda porque tiene " + usuariosAsociados.size() + " usuario(s) vinculado(s).");
+            }
+
+            // ==============================
+            // LIMPIEZA MANUAL CON WEBCLIENT 
+            // ==============================
+            
+            // Paso 2: Limpiar Eventos
+            try {
+                webClientBuilder.build().delete()
+                    .uri("http://localhost:8086/api/v2/eventos/banda/" + id)
+                    .retrieve().toBodilessEntity().block();
+            } catch (Exception e) {
+                System.out.println("Ignorando error en Eventos: " + e.getMessage());
+            }
+
+            // Paso 3: Limpiar Finanzas
+            try {
+                webClientBuilder.build().delete()
+                    .uri("http://localhost:8087/api/v2/finanzas/banda/" + id)
+                    .retrieve().toBodilessEntity().block();
+            } catch (Exception e) {
+                System.out.println("Ignorando error en Finanzas: " + e.getMessage());
+            }
+
+            // Paso 4: Limpiar Giras
+            try {
+                webClientBuilder.build().delete()
+                    .uri("http://localhost:8088/api/v2/giras/banda/" + id)
+                    .retrieve().toBodilessEntity().block();
+            } catch (Exception e) {
+                System.out.println("Ignorando error en Giras: " + e.getMessage());
+            }
+
+            // Paso 5: Limpiar Logística
+            try {
+                webClientBuilder.build().delete()
+                    .uri("http://localhost:8090/api/v2/logistica/banda/" + id)
+                    .retrieve().toBodilessEntity().block();
+            } catch (Exception e) {
+                System.out.println("Ignorando error en Logística: " + e.getMessage());
+            }
+
+            // Paso 6: Limpiar Merchandising
+            try {
+                webClientBuilder.build().delete()
+                    .uri("http://localhost:8091/api/v2/merchandising/banda/" + id)
+                    .retrieve().toBodilessEntity().block();
+            } catch (Exception e) {
+                System.out.println("Ignorando error en Merchandising: " + e.getMessage());
+            }
+
+            // Paso 7: Limpiar Canciones (Rig Builder)
+            try {
+                webClientBuilder.build().delete()
+                    .uri("http://localhost:8085/api/v2/canciones/banda/" + id)
+                    .retrieve().toBodilessEntity().block();
+            } catch (Exception e) {
+                System.out.println("Ignorando error en Rig: " + e.getMessage());
             }
             
-            // 3. Si está limpia, procedemos a borrarla
+            // ==========================================================
+
+            // Paso Final: Borrar la banda localmente
             bandaRepository.deleteById(id);
             return true;
         }
         return false;
     }
 }
+
+
