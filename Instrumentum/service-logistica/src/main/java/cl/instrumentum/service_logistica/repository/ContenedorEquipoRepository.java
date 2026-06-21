@@ -10,4 +10,6 @@ public interface ContenedorEquipoRepository extends JpaRepository<ContenedorEqui
     List<ContenedorEquipo> findByContenedor(Contenedor contenedor);
     
     Optional<ContenedorEquipo> findByContenedorAndIdEquipo(Contenedor contenedor, Long idEquipo);
+    
+    void deleteByIdEquipo(Long idEquipo);
 }

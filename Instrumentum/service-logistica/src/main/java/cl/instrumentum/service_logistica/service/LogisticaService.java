@@ -137,5 +137,11 @@ public class LogisticaService {
                 .orElseThrow(() -> new RuntimeException("Error: Equipo no ese en este contenedor"));
         contenedorEquipoRepository.delete(conE);
     }
+
+    @Transactional
+    public void eliminarEquipoDeTodosLosContenedores(Long idEquipo) {
+        contenedorEquipoRepository.deleteByIdEquipo(idEquipo);
+    }
 }
 // Agregarle (quizá) un actualizar equipo en contenedor. Igual no creo porque se puede quitar y agregar otro.
+// NAH -qn más po

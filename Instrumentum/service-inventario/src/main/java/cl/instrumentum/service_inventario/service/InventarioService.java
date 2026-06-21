@@ -153,7 +153,7 @@ public class InventarioService {
             throw new IllegalArgumentException("No se puede eliminar el equipo porque está asignado en una o más canciones activas.");
         }
  
-        // Eliminaciones en cascada lógicas (Si fallan, usamos SLF4J para alertar sin romper el flujo de XAMPP)
+        // Eliminaciones en cascada lógicas 
         try {
             webClientBuilder.build()
                     .delete()
@@ -175,6 +175,21 @@ public class InventarioService {
         } catch (Exception e) {
             log.error("INTEGRIDAD AFECTADA: No se eliminaron los mantenimientos del equipo {} en mantenimiento. Motivo: {}", id, e.getMessage());
         }
+
+        // =========================================================
+        // NUEVO: Notificar a Logística para eliminar de contenedores
+        // =========================================================
+        try {
+            webClientBuilder.build()
+                    .delete()
+                    .uri("http://localhost:8090/api/v2/logistica/equipos/" + id)
+                    .retrieve()
+                    .toBodilessEntity()
+                    .block();
+        } catch (Exception e) {
+            log.error("INTEGRIDAD AFECTADA: No se eliminó el equipo {} de los contenedores de logística. Motivo: {}", id, e.getMessage());
+        }
+        // =========================================================
  
         equipoRepository.deleteById(id);
     }

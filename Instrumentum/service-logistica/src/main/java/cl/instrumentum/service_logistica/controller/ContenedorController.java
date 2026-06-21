@@ -138,4 +138,17 @@ public class ContenedorController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
+
+
+    // Remover un equipo de TODOS los contenedores (Endpoint global para borrado en cascada)
+    @Operation(summary = "Remover equipo globalmente", description = "Saca un instrumento de todos los contenedores al ser eliminado del inventario")
+    @DeleteMapping("/equipos/{idEquipo}")
+    public ResponseEntity<String> removerEquipoGlobal(@PathVariable Long idEquipo) {
+        try {
+            logisticaService.eliminarEquipoDeTodosLosContenedores(idEquipo);
+            return ResponseEntity.ok("Equipo removido de todos los contenedores exitosamente");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al limpiar el equipo de logística: " + e.getMessage());
+        }
+    }
 }
