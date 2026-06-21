@@ -62,14 +62,14 @@ public class AuthServiceTest {
 
         Rol rolUser = new Rol();
         rolUser.setId(1L);
-        rolUser.setNombreRol("ROLE_USER");
+        rolUser.setNombreRol("Músico");
 
         Usuario usuarioExistente = new Usuario();
         usuarioExistente.setNombreUsuario(nombreUsuario);
         usuarioExistente.setContrasena(contrasenaEncriptada);
         usuarioExistente.setRoles(Set.of(rolUser));
 
-        List<String> rolesEsperados = List.of("ROLE_USER");
+        List<String> rolesEsperados = List.of("Músico");
 
         when(usuarioRepo.findByNombreUsuario(nombreUsuario)).thenReturn(Optional.of(usuarioExistente));
         when(passwordEncoder.matches(contrasenaPlana, contrasenaEncriptada)).thenReturn(true);
