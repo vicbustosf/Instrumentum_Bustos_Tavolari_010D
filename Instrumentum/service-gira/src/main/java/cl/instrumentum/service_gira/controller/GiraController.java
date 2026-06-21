@@ -13,10 +13,13 @@ import org.springframework.web.bind.annotation.*;
 
 import cl.instrumentum.service_gira.model.Gira;
 import cl.instrumentum.service_gira.service.GiraService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/v2/giras")
+@Tag(name = "Controlador de Giras", description = "Endpoints para la gestión del ciclo de vida y consultas de Giras musicales")
 public class GiraController {
 
     @Autowired
@@ -25,11 +28,13 @@ public class GiraController {
     // ENDPOINTS DE GIRAS          
 
     @GetMapping
+    @Operation(summary = "Listar todas las giras", description = "Recupera un listado completo con todas las giras registradas en el sistema.")
     public List<Gira> listarGiras() {
         return giraService.listarGiras();
     }
 
     @GetMapping("/{id}")
+    @Operation(summary = "Buscar gira por ID", description = "Obtiene los detalles de una gira específica utilizando su identificador único.")
     public ResponseEntity<Map<String, Object>> obtenerGiraPorId(@PathVariable Long id) {
         return giraService.buscarGiraPorId(id)
                 .map(g -> ResponseEntity.ok(
@@ -39,11 +44,13 @@ public class GiraController {
     }
 
     @GetMapping("/banda/{idBanda}")
+    @Operation(summary = "Listar giras por banda", description = "Recupera todas las giras asociadas a una banda musical específica filtrando por su ID.")
     public List<Gira> listarGirasPorBanda(@PathVariable Long idBanda) {
         return giraService.listarPorBanda(idBanda);
     }
 
     @PostMapping
+    @Operation(summary = "Crear una nueva gira", description = "Registra una gira en la base de datos tras validar lógicamente que la banda exista en el sistema externo.")
     public ResponseEntity<Map<String, Object>> crearGira(@Valid @RequestBody Gira gira) {
         Gira nueva = giraService.guardarGira(gira);
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -51,6 +58,7 @@ public class GiraController {
     }
 
     @PutMapping("/{id}")
+    @Operation(summary = "Actualizar una gira existente", description = "Modifica los datos de una gira existente por su ID. Vuelve a validar la existencia de la banda de ser necesario.")
     public ResponseEntity<Map<String, Object>> actualizarGira(@PathVariable Long id, @Valid @RequestBody Gira gira) {
         return Optional.ofNullable(giraService.actualizarGira(id, gira))
                 .map(g -> ResponseEntity.ok(
@@ -60,6 +68,7 @@ public class GiraController {
     }
 
     @DeleteMapping("/{id}")
+    @Operation(summary = "Eliminar una gira", description = "Remueve físicamente de la base de datos una gira y todas sus paradas logísticas asociadas de forma segura.")
     public ResponseEntity<Map<String, String>> eliminarGira(@PathVariable Long id) {
         boolean eliminado = giraService.eliminarGira(id);
         if (eliminado) {

@@ -10,6 +10,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
 import cl.instrumentum.service_rig.service.RigService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 // Es auxiliar para el InventarioService, 
 // para consultar si un equipo está asignado a alguna canción, 
@@ -17,6 +19,7 @@ import cl.instrumentum.service_rig.service.RigService;
 
 @RestController
 @RequestMapping("/api/v2/equipos")
+@Tag(name = "Controlador Auxiliar de Equipos", description = "Endpoints de soporte rápido para otros microservicios (como Inventario)")
 public class EquipoAuxController {
 
     @Autowired
@@ -26,6 +29,7 @@ public class EquipoAuxController {
     // pero InventarioService lo consumía con bodyToMono(Boolean.class),
     // causando un 500. Se simplifica para devolver el boolean directamente.
     @GetMapping("/en-cancion/{equipoId}")
+    @Operation(summary = "Verificar asignación de equipo", description = "Responde directamente con un valor booleano si el equipo está asignado a alguna canción del sistema.")
     public boolean estaEnCancion(@PathVariable Long equipoId) {
         return rigService.equipoEstaEnAlgunaCancion(equipoId);
     }

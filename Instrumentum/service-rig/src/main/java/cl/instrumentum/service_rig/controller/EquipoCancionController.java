@@ -12,16 +12,20 @@ import org.springframework.web.bind.annotation.*;
 import cl.instrumentum.service_rig.model.Cancion;
 import cl.instrumentum.service_rig.model.EquipoCancion;
 import cl.instrumentum.service_rig.service.RigService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import cl.instrumentum.service_rig.repository.CancionRepository;
 
 @RestController
 @RequestMapping("/api/v2/canciones")
+@Tag(name = "Controlador de Asignación de Equipos", description = "Endpoints para gestionar la cadena de efectos (equipos) de las canciones")
 public class EquipoCancionController {
 
     @Autowired
     private RigService rigService;
 
     @PostMapping("/{cancionId}/equipos")
+    @Operation(summary = "Asignar equipo a canción", description = "Vincula un equipo del inventario a una canción especificando su posición y seteo.")
     public ResponseEntity<?> asignarEquipo(
             @PathVariable Long cancionId,
             @RequestBody Map<String, Object> request) {
@@ -65,6 +69,7 @@ public class EquipoCancionController {
     }
 
     @PutMapping("/{cancionId}/equipos/{equipoId}")
+    @Operation(summary = "Actualizar asignación de equipo", description = "Modifica los parámetros de posición o seteo de un equipo ya asignado a una canción.")
     public ResponseEntity<Map<String, Object>> actualizarEquipo(
             @PathVariable Long cancionId,
             @PathVariable Long equipoId,
@@ -92,6 +97,7 @@ public class EquipoCancionController {
     }
 
     @DeleteMapping("/{cancionId}/equipos/{equipoId}")
+    @Operation(summary = "Remover equipo de canción", description = "Quita un equipo específico de la cadena de efectos de la canción.")
     public ResponseEntity<Map<String, String>> removerEquipo(
             @PathVariable Long cancionId,
             @PathVariable Long equipoId) {
@@ -111,6 +117,7 @@ public class EquipoCancionController {
     }
 
     @GetMapping("/{cancionId}/setup-completo")
+    @Operation(summary = "Obtener setup completo de la canción", description = "Retorna la información de la canción junto con todos sus equipos ordenados por posición.")
     public ResponseEntity<Map<String, Object>> obtenerSetupCompleto(@PathVariable Long cancionId) {
         try {
             return ResponseEntity.ok(rigService.obtenerSetupCompleto(cancionId));

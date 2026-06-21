@@ -13,16 +13,20 @@ import org.springframework.web.bind.annotation.*;
 
 import cl.instrumentum.service_inventario.model.Marca;
 import cl.instrumentum.service_inventario.service.InventarioService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/v2/marcas")
+@Tag(name = "Controlador de Marcas", description = "Endpoints para gestionar las marcas de los equipos")
 public class MarcaController {
 
     @Autowired
     private InventarioService inventarioService;
 
     @PostMapping
+    @Operation(summary = "Crear una nueva marca", description = "Añade una marca al catálogo general.")
     public ResponseEntity<Map<String, Object>> crear(@Valid @RequestBody Marca marca) {
         Marca nueva = inventarioService.guardarMarca(marca);
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -30,11 +34,13 @@ public class MarcaController {
     }
 
     @GetMapping
+    @Operation(summary = "Listar todas las marcas", description = "Devuelve una lista completa de todas las marcas registradas.")
     public List<Marca> listar() {
         return inventarioService.listarMarcas();
     }
 
     @GetMapping("/{id}")
+    @Operation(summary = "Obtener una marca por ID", description = "Busca una marca específica utilizando su identificador único.")
     public ResponseEntity<Map<String, Object>> obtener(@PathVariable Long id) {
         Marca m = inventarioService.obtenerMarcaPorId(id)
                 .orElseThrow(() -> new NoSuchElementException("No existe una marca con ID " + id + "."));
@@ -42,6 +48,7 @@ public class MarcaController {
     }
 
     @PutMapping("/{id}")
+    @Operation(summary = "Actualizar una marca", description = "Actualiza el nombre de una marca existente pasándole su ID.")
     public ResponseEntity<Map<String, Object>> actualizar(@PathVariable Long id, @Valid @RequestBody Marca datos) {
         Marca m = inventarioService.obtenerMarcaPorId(id)
                 .orElseThrow(() -> new NoSuchElementException("No existe una marca con ID " + id + "."));
@@ -52,6 +59,7 @@ public class MarcaController {
     }
 
     @DeleteMapping("/{id}")
+    @Operation(summary = "Eliminar una marca", description = "Borra una marca del sistema siempre y cuando no tenga equipos dependientes asignados.")
     public ResponseEntity<Map<String, String>> eliminar(@PathVariable Long id) {
         inventarioService.eliminarMarca(id);
         return ResponseEntity.ok(Map.of("mensaje", "Marca " + id + " eliminada correctamente."));

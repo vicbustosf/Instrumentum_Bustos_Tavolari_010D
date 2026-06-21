@@ -12,7 +12,7 @@ spring:
       globalcors:
         cors-configurations:
           '[/**]':
-            allowedOrigins: "http://localhost:9090"
+            allowedOrigins: "http://localhost:9090" #9090
             allowedMethods:
               - GET
               - POST
@@ -109,7 +109,7 @@ spring:
 
         # --- Rutas Docs ---
         - id: logistica-docs
-          uri: http://localhost:8090 # Ver si se puede tener en el mismo puerto con los normales...
+          uri: http://localhost:8090
           predicates:
             - Path=/logistica/api-docs
 
@@ -117,8 +117,46 @@ spring:
           uri: http://localhost:8091
           predicates:
             - Path=/merchandising/api-docs
-#Volver a checar si los microservicios se interceptan entre ellos...
 
+        - id: usuario-docs
+          uri: http://localhost:8081
+          predicates:
+          - Path=/v2/api-docs/usuario
+
+        - id: specs-docs
+          uri: http://localhost:8083
+          predicates:
+          - Path=/v2/api-docs/specs
+
+        - id: rig-docs
+          uri: http://localhost:8085
+          predicates:
+          - Path=/v2/api-docs/rig
+        
+        - id: mantenimiento-docs
+          uri: http://localhost:8084
+          predicates:
+          - Path=/v2/api-docs/mantenimiento
+
+        - id: inventario-docs
+          uri: http://localhost:8082
+          predicates:
+          - Path=/v2/api-docs/inventario
+
+        - id: gira-docs
+          uri: http://localhost:8088
+          predicates:
+          - Path=/v2/api-docs/gira
+
+        - id: finanza-docs
+          uri: http://localhost:8087
+          predicates:
+          - Path=/v2/api-docs/finanza
+
+        - id: evento-docs
+          uri: http://localhost:8086
+          predicates:
+          - Path=/v2/api-docs/eventos
 eureka:
   client:
     register-with-eureka: false
@@ -133,10 +171,31 @@ springdoc:
       - name: Servicio Merchandising
         url: /merchandising/api-docs
 
+      - name: Servicio Usuarios
+        url: /v2/api-docs/usuario
+
+      - name: Servicio Specs
+        url: /v2/api-docs/specs
+
+      - name: Servicio Rig
+        url: /v2/api-docs/rig
+      
+      - name: Servicio Mantenimiento
+        url: /v2/api-docs/mantenimiento
+
+      - name: Servicio Inventario
+        url: /v2/api-docs/inventario
+
+      - name: Servicio Gira
+        url: /v2/api-docs/gira
+
+      - name: Servicio Finanza
+        url: /v2/api-docs/finanza
+
+      - name: Servicio Evento
+        url: /v2/api-docs/eventos
+
 logging:
   level:
     org.springframework.cloud.gateway: TRACE
     org.springframework.http.server.reactive: DEBUG
-
-
-   

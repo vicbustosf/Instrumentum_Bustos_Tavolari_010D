@@ -13,16 +13,20 @@ import org.springframework.web.bind.annotation.*;
 
 import cl.instrumentum.service_inventario.model.Categoria;
 import cl.instrumentum.service_inventario.service.InventarioService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/v2/categorias")
+@Tag(name = "Controlador de Categorías", description = "Endpoints para la parametrización de categorías del inventario")
 public class CategoriaController {
 
     @Autowired    
     private InventarioService inventarioService;
 
     @PostMapping
+    @Operation(summary = "Crear una nueva categoría", description = "Añade una categoría al sistema para agrupar equipos.")
     public ResponseEntity<Map<String, Object>> crear(@Valid @RequestBody Categoria categoria) {
         Categoria nueva = inventarioService.guardarCategoria(categoria);
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -30,11 +34,13 @@ public class CategoriaController {
     }
 
     @GetMapping
+    @Operation(summary = "Listar todas las categorías", description = "Retorna una lista completa con las categorías disponibles.")
     public List<Categoria> listar() {
         return inventarioService.listarCategorias();
     }
 
     @GetMapping("/{id}")
+    @Operation(summary = "Obtener una categoría por ID", description = "Recupera una categoría según su ID.")
     public ResponseEntity<Map<String, Object>> obtener(@PathVariable Long id) {
         Categoria c = inventarioService.obtenerCategoriaPorId(id)
                 .orElseThrow(() -> new NoSuchElementException("No existe una categoría con ID " + id + "."));
@@ -42,6 +48,7 @@ public class CategoriaController {
     }
 
     @PutMapping("/{id}")
+    @Operation(summary = "Actualizar una categoría", description = "Modifica los datos de una categoría basándose en su ID.")
     public ResponseEntity<Map<String, Object>> actualizar(@PathVariable Long id, @Valid @RequestBody Categoria datos) {
         Categoria c = inventarioService.obtenerCategoriaPorId(id)
                 .orElseThrow(() -> new NoSuchElementException("No existe una categoría con ID " + id + "."));
@@ -52,6 +59,7 @@ public class CategoriaController {
     }
 
     @DeleteMapping("/{id}")
+    @Operation(summary = "Eliminar una categoría", description = "Elimina de la base de datos una categoría que no contenga ningún equipo asociado.")
     public ResponseEntity<Map<String, String>> eliminar(@PathVariable Long id) {
         inventarioService.eliminarCategoria(id);
         return ResponseEntity.ok(Map.of("mensaje", "Categoría " + id + " eliminada correctamente."));

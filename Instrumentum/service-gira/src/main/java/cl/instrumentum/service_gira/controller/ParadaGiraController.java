@@ -13,21 +13,26 @@ import org.springframework.web.bind.annotation.*;
 
 import cl.instrumentum.service_gira.model.ParadaGira;
 import cl.instrumentum.service_gira.service.GiraService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/v2/paradas")
+@Tag(name = "Controlador de Paradas de Gira", description = "Endpoints para la gestión de paradas y logística del itinerario de giras")
 public class ParadaGiraController {
 
     @Autowired
     private GiraService giraService; // Usamos el mismo GiraService que ya gestiona ambas entidades
 
     @GetMapping("/gira/{idGira}")
+    @Operation(summary = "Listar paradas por gira", description = "Retorna el listado completo de paradas logísticas asignadas a una gira particular.")
     public List<ParadaGira> listarParadasPorGira(@PathVariable Long idGira) {
         return giraService.listarParadasPorGira(idGira);
     }
 
     @GetMapping("/{id}")
+    @Operation(summary = "Buscar parada logística por ID", description = "Busca y devuelve una parada específica del itinerario por su ID único.")
     public ResponseEntity<Map<String, Object>> obtenerPorId(@PathVariable Long id) {
         return giraService.buscarParadaPorId(id)
                 .map(p -> ResponseEntity.ok(
@@ -37,6 +42,7 @@ public class ParadaGiraController {
     }
 
     @PostMapping
+    @Operation(summary = "Registrar una nueva parada", description = "Crea una parada en el itinerario asociándola a una gira existente y validando el evento de forma remota.")
     public ResponseEntity<Map<String, Object>> crearParada(@Valid @RequestBody ParadaGira parada) {
         ParadaGira nueva = giraService.guardarParada(parada);
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -44,6 +50,7 @@ public class ParadaGiraController {
     }
 
     @PutMapping("/{id}")
+    @Operation(summary = "Actualizar una parada existente", description = "Actualiza los detalles logísticos (transporte, hotel, ciudad, etc.) de una parada determinada por su ID.")
     public ResponseEntity<Map<String, Object>> actualizarParada(@PathVariable Long id, @Valid @RequestBody ParadaGira parada) {
         return Optional.ofNullable(giraService.actualizarParada(id, parada))
                 .map(p -> ResponseEntity.ok(
@@ -53,6 +60,7 @@ public class ParadaGiraController {
     }
 
     @DeleteMapping("/{id}")
+    @Operation(summary = "Eliminar una parada", description = "Elimina una parada específica de un itinerario sin alterar la gira completa.")
     public ResponseEntity<Map<String, String>> eliminarParada(@PathVariable Long id) {
         boolean eliminado = giraService.eliminarParada(id);
         if (eliminado) {

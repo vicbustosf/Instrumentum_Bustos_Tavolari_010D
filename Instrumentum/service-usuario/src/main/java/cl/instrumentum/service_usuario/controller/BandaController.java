@@ -3,30 +3,33 @@ package cl.instrumentum.service_usuario.controller;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
-
 import cl.instrumentum.service_usuario.model.Banda;
 import cl.instrumentum.service_usuario.service.UsuarioService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/v2/bandas")
+@Tag(name = "Controlador de Bandas", description = "Endpoints para la gestión de bandas musicales")
 public class BandaController {
 
     @Autowired
     private UsuarioService usuarioService;
 
     @GetMapping
+    @Operation(summary = "Listar todas las bandas", description = "Retorna una lista completa de las bandas registradas")
     public List<Banda> listar() {
         return usuarioService.listarBandas();
     }
 
     @GetMapping("/{id}")
+    @Operation(summary = "Buscar banda por ID", description = "Retorna la información de una banda específica mediante su ID")
     public ResponseEntity<Map<String, Object>> obtener(@PathVariable Long id) {
         return usuarioService.buscarBandaPorId(id)
                 .map(b -> ResponseEntity.ok(
@@ -36,6 +39,7 @@ public class BandaController {
     }
 
     @PostMapping
+    @Operation(summary = "Crear nueva banda", description = "Registra una nueva banda en el sistema")
     public ResponseEntity<Map<String, Object>> crear(@Valid @RequestBody Banda banda) {
         Banda nueva = usuarioService.guardarBanda(banda);
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -43,6 +47,7 @@ public class BandaController {
     }
 
     @PutMapping("/{id}")
+    @Operation(summary = "Actualizar banda existente", description = "Modifica los datos de una banda mediante su ID")
     public ResponseEntity<Map<String, Object>> actualizar(
             @PathVariable Long id, 
             @Valid @RequestBody Banda banda) { // Escudo de validación activo
@@ -60,6 +65,7 @@ public class BandaController {
 
     // MODIFICADO: Manejo usando el boolean del Service igual q en usuario
     @DeleteMapping("/{id}")
+    @Operation(summary = "Eliminar una banda", description = "Elimina una banda del registro local y limpia en cascada sus dependencias")
     public ResponseEntity<Map<String, String>> eliminar(@PathVariable Long id) {
         boolean eliminado = usuarioService.eliminarBanda(id);
         

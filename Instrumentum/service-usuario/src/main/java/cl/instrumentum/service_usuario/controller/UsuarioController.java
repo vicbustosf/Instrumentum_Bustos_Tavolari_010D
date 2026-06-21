@@ -3,30 +3,33 @@ package cl.instrumentum.service_usuario.controller;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
-
 import cl.instrumentum.service_usuario.model.Usuario;
 import cl.instrumentum.service_usuario.service.UsuarioService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/v2/usuarios")
+@Tag(name = "Controlador de Usuarios", description = "Endpoints para la gestión de usuarios integrantes de bandas")
 public class UsuarioController {
 
     @Autowired
     private UsuarioService usuarioService;
 
     @GetMapping
+    @Operation(summary = "Listar todos los usuarios", description = "Retorna una lista completa de los usuarios registrados")
     public List<Usuario> listar() {
         return usuarioService.listarUsuarios();
     }
 
     @GetMapping("/{id}")
+    @Operation(summary = "Buscar usuario por ID", description = "Retorna la información de un usuario específico según su ID")
     public ResponseEntity<Map<String, Object>> obtener(@PathVariable Long id) {
         return usuarioService.buscarUsuarioPorId(id)
                 .map(u -> ResponseEntity.ok(
@@ -36,6 +39,7 @@ public class UsuarioController {
     }
 
     @PostMapping
+    @Operation(summary = "Crear nuevo usuario", description = "Registra un usuario validando su rol y formato de correo electrónico")
     public ResponseEntity<Map<String, Object>> crear(@Valid @RequestBody Usuario usuario) {
         Usuario nuevo = usuarioService.guardarUsuario(usuario);
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -44,6 +48,7 @@ public class UsuarioController {
 
     // PUT: Actualizar un usuario existente
     @PutMapping("/{id}")
+    @Operation(summary = "Actualizar usuario existente", description = "Modifica los datos del usuario correspondiente al ID")
     public ResponseEntity<Map<String, Object>> actualizar(
             @PathVariable Long id, 
             @Valid @RequestBody Usuario usuario) {
@@ -61,6 +66,7 @@ public class UsuarioController {
 
     // MODIFICADO: Manejo usando el boolean del Service
     @DeleteMapping("/{id}")
+    @Operation(summary = "Eliminar un usuario", description = "Remueve un usuario del sistema si este existe")
     public ResponseEntity<Map<String, String>> eliminar(@PathVariable Long id) {
         boolean eliminado = usuarioService.eliminarUsuario(id);
         
@@ -73,6 +79,7 @@ public class UsuarioController {
     }
 
     @GetMapping("/banda/{idBanda}")
+    @Operation(summary = "Listar usuarios por banda", description = "Obtiene todos los usuarios pertenecientes a una banda específica")
     public List<Usuario> porBanda(@PathVariable Long idBanda) {
         return usuarioService.usuariosPorBanda(idBanda);
     }

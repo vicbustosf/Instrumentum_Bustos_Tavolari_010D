@@ -12,21 +12,26 @@ import org.springframework.web.bind.annotation.*;
 
 import cl.instrumentum.service_rig.model.Cancion;
 import cl.instrumentum.service_rig.service.RigService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/v2/canciones")
+@Tag(name = "Controlador de Canciones", description = "Endpoints para la gestión del ciclo de vida de las canciones")
 public class CancionController {
 
     @Autowired
     private RigService rigService;
 
     @GetMapping("/banda/{bandaId}")
+    @Operation(summary = "Listar canciones por banda", description = "Recupera todas las canciones asociadas a un identificador de banda específico.")
     public List<Cancion> listarPorBanda(@PathVariable Long bandaId) {
         return rigService.listarCancionesPorBanda(bandaId);
     }
 
     @GetMapping("/{id}")
+    @Operation(summary = "Obtener canción por ID", description = "Busca y devuelve los datos detallados de una canción basándose en su ID único.")
     public ResponseEntity<Map<String, Object>> obtener(@PathVariable Long id) {
         return rigService.buscarCancionPorId(id)
                 .map(c -> ResponseEntity.ok(
@@ -36,6 +41,7 @@ public class CancionController {
     }
 
     @PostMapping
+    @Operation(summary = "Crear canción", description = "Registra una nueva canción en el sistema tras validar que la banda exista.")
     public ResponseEntity<Map<String, Object>> crear(@Valid @RequestBody Cancion cancion) {
         Cancion nueva = rigService.guardarCancion(cancion);
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -43,6 +49,7 @@ public class CancionController {
     }
 
    @PutMapping("/{id}")
+   @Operation(summary = "Actualizar canción", description = "Modifica los datos de una canción existente localizándola por su ID.")
    public ResponseEntity<Map<String, Object>> actualizar(@PathVariable Long id, @Valid @RequestBody Cancion datos) { // Se añade @Valid aquí
         return rigService.buscarCancionPorId(id)
                 .map(c -> {
@@ -58,6 +65,7 @@ public class CancionController {
     }
 
     @DeleteMapping("/{id}")
+    @Operation(summary = "Eliminar canción", description = "Remueve una canción del sistema por su ID, eliminando en cascada sus equipos asignados.")
     public ResponseEntity<Map<String, String>> eliminar(@PathVariable Long id) {
         boolean eliminado = rigService.eliminarCancion(id);
         

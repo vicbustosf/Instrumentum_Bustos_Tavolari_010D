@@ -3,8 +3,8 @@ package cl.instrumentum.service_gira.model;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -26,22 +26,28 @@ import lombok.EqualsAndHashCode;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Schema(description = "Entidad que representa una gira musical programada por una banda.")
 public class Gira {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Schema(description = "Identificador único de la gira en la base de datos", example = "1")
     private Long idGira;
 
     @NotNull(message = "El ID de la banda es obligatorio")
+    @Schema(description = "ID de la banda dueña de la gira (Relación lógica con servicio externo)", example = "10")
     private Long idBanda; // Relación lógica externa (Mantiene el ID plano)
 
     @NotBlank(message = "El nombre de la gira es obligatorio")
+    @Schema(description = "Nombre oficial o comercial de la gira", example = "Latinoamérica Despierta 2026")
     private String nombreGira;
 
     @NotNull(message = "La fecha de inicio es obligatoria")
+    @Schema(description = "Fecha en la que inicia el itinerario de la gira", example = "2026-07-01")
     private LocalDate fechaInicio;
 
     @NotNull(message = "La fecha de fin es obligatoria")
+    @Schema(description = "Fecha de término de la gira", example = "2026-08-15")
     private LocalDate fechaFin;
 
 //      RELACIÓN FÍSICA (1:N) HACIA PARADAS
@@ -53,6 +59,7 @@ public class Gira {
     @JsonManagedReference // Evita la recursión infinita al serializar a JSON
     @ToString.Exclude // Evita StackOverflow en Lombok(stackoverflow quiere decir que se llama a si mismo  infinitamente, en este caso porque Gira tiene una lista de ParadaGira, y cada ParadaGira tiene una referencia a Gira)
     @EqualsAndHashCode.Exclude // lo mismo que arriba, pero para los métodos equals y hashcode de Lombok
+    @Schema(description = "Listado de paradas logísticas asociadas a esta gira")
     private List<ParadaGira> paradas = new ArrayList<>();
 
     @AssertTrue(message = "La fecha de fin debe ser posterior o igual a la fecha de inicio")
