@@ -63,7 +63,6 @@ class ParadaGiraServiceTest {
         giraMock = new Gira(1L, 10L, "Tour Volver", LocalDate.now(), LocalDate.now().plusDays(5), new ArrayList<>());
         paradaMock = new ParadaGira(105L, giraMock, 500L, "Santiago", "Hotel Costanera", "Van Privada");
 
-        // Configuración común para Mockear la cadena fluida del WebClient
         lenient().when(webClientBuilder.build()).thenReturn(webClient);
         lenient().when(webClient.get()).thenReturn(requestHeadersUriSpec);
         lenient().when(requestHeadersUriSpec.uri(anyString())).thenReturn(requestHeadersSpec);

@@ -71,7 +71,6 @@ class EquipoServiceTest {
     @Test
     void crearEquipoTest() {
         mockWebClientForValidation();
-        // SOLUCCIÓN: Mockear el findById para que el servicio crea que el equipo ya existe o pasa la validación de actualización
         when(equipoRepository.findById(equipoSample.getId())).thenReturn(Optional.of(equipoSample));
         when(equipoRepository.findByNombre(equipoSample.getNombre())).thenReturn(Optional.of(equipoSample));
         when(equipoRepository.save(any(Equipo.class))).thenReturn(equipoSample);
@@ -128,25 +127,19 @@ class EquipoServiceTest {
 @SuppressWarnings("unchecked")
     @Test
     void eliminarEquipoTest() {
-        // 1. Mock de Base de Datos para el flujo feliz
         when(equipoRepository.findById(1L)).thenReturn(Optional.of(equipoSample));
         when(webClientBuilder.build()).thenReturn(webClient);
         
-        // 2. Configuración para el método GET (verificación inicial en-cancion)
-        // SEPARADO PASO A PASO PARA EVITAR ERRORES DE COMPILACIÓN
         doReturn(requestHeadersUriSpec).when(webClient).get();
         doReturn(requestHeadersSpec).when(requestHeadersUriSpec).uri(anyString());
         doReturn(responseSpec).when(requestHeadersSpec).retrieve();
         doReturn(Mono.just(Boolean.FALSE)).when(responseSpec).bodyToMono(Boolean.class);
         
-        // 3. Configuración para los métodos DELETE en cascada lógicos
-        // USANDO doReturn CON INTERFACES LIMPIAS
         doReturn(requestBodyUriSpec).when(webClient).delete();
         doReturn(requestBodySpec).when(requestBodyUriSpec).uri(anyString());
         doReturn(responseSpec).when(requestBodySpec).retrieve();
         doReturn(Mono.empty()).when(responseSpec).toBodilessEntity();
 
-        // Ejecución y verificación
         assertDoesNotThrow(() -> inventarioService.eliminarEquipo(1L));
         verify(equipoRepository, times(1)).deleteById(1L);
     }

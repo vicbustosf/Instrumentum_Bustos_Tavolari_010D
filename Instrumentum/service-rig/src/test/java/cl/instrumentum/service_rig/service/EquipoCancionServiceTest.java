@@ -29,11 +29,10 @@ public class EquipoCancionServiceTest {
     private CancionRepository cancionRepository;
 
     @InjectMocks
-    private RigService rigService; // El servicio bajo prueba que contiene la lógica de asignación
+    private RigService rigService;
 
     @Test
     public void buscarEquipoCancionTest() {
-        // Arrange
         Cancion cancion = new Cancion(1L, "Cancion A", 1L, 180, new ArrayList<>());
         Long equipoId = 55L;
         EquipoCancion ecSimulado = new EquipoCancion(100L, cancion, equipoId, 1, "Gain: 5");
@@ -41,10 +40,8 @@ public class EquipoCancionServiceTest {
         when(equipoCancionRepository.findByCancionAndEquipoId(cancion, equipoId))
                 .thenReturn(Optional.of(ecSimulado));
 
-        // Act
         Optional<EquipoCancion> resultado = rigService.buscarEquipoCancion(cancion, equipoId);
 
-        // Assert
         assertTrue(resultado.isPresent());
         assertEquals(equipoId, resultado.get().getEquipoId());
         verify(equipoCancionRepository, times(1)).findByCancionAndEquipoId(cancion, equipoId);
@@ -52,16 +49,13 @@ public class EquipoCancionServiceTest {
 
     @Test
     public void guardarEquipoCancionTest() {
-        // Arrange
         EquipoCancion ecParaGuardar = new EquipoCancion(null, null, 55L, 1, "Gain: 5");
         EquipoCancion ecGuardado = new EquipoCancion(100L, null, 55L, 1, "Gain: 5");
         
         when(equipoCancionRepository.save(ecParaGuardar)).thenReturn(ecGuardado);
 
-        // Act
         EquipoCancion resultado = rigService.guardarEquipoCancion(ecParaGuardar);
 
-        // Assert
         assertNotNull(resultado);
         assertEquals(100L, resultado.getId());
         verify(equipoCancionRepository, times(1)).save(ecParaGuardar);
@@ -69,7 +63,6 @@ public class EquipoCancionServiceTest {
 
     @Test
     public void removerEquipoCancionTest() {
-        // Arrange
         Cancion cancion = new Cancion(1L, "Cancion A", 1L, 180, new ArrayList<>());
         Long equipoId = 55L;
         EquipoCancion ecExistente = new EquipoCancion(100L, cancion, equipoId, 1, "Gain: 5");
@@ -78,10 +71,8 @@ public class EquipoCancionServiceTest {
                 .thenReturn(Optional.of(ecExistente));
         doNothing().when(equipoCancionRepository).delete(ecExistente);
 
-        // Act
         boolean resultado = rigService.removerEquipo(cancion, equipoId);
 
-        // Assert
         assertTrue(resultado);
         verify(equipoCancionRepository, times(1)).findByCancionAndEquipoId(cancion, equipoId);
         verify(equipoCancionRepository, times(1)).delete(ecExistente);
@@ -89,21 +80,17 @@ public class EquipoCancionServiceTest {
 
     @Test
     public void equipoEstaEnAlgunaCancionEquipoCancionTest() {
-        // Arrange
         Long equipoId = 55L;
         when(equipoCancionRepository.existsByEquipoId(equipoId)).thenReturn(true);
 
-        // Act
         boolean resultado = rigService.equipoEstaEnAlgunaCancion(equipoId);
 
-        // Assert
         assertTrue(resultado);
         verify(equipoCancionRepository, times(1)).existsByEquipoId(equipoId);
     }
 
     @Test
     public void obtenerSetupCompletoEquipoCancionTest() {
-        // Arrange
         Long cancionId = 1L;
         Cancion cancion = new Cancion(cancionId, "Cancion A", 1L, 180, new ArrayList<>());
         List<EquipoCancion> listaEquipos = List.of(
@@ -114,10 +101,8 @@ public class EquipoCancionServiceTest {
         when(cancionRepository.findById(cancionId)).thenReturn(Optional.of(cancion));
         when(equipoCancionRepository.findByCancionOrderByPosicionAsc(cancion)).thenReturn(listaEquipos);
 
-        // Act
         Map<String, Object> resultado = rigService.obtenerSetupCompleto(cancionId);
 
-        // Assert
         assertNotNull(resultado);
         assertEquals(cancion, resultado.get("cancion"));
         assertEquals(listaEquipos, resultado.get("equipos"));

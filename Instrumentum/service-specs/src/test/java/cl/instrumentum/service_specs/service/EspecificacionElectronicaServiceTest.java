@@ -94,7 +94,6 @@ public class EspecificacionElectronicaServiceTest {
         Long equipoId = 2L;
         EspecificacionElectronica el = new EspecificacionElectronica(equipoId, "9V DC", 12.0, "True Bypass");
 
-        // Evitamos el NullPointerException simulando un retorno para la primera entidad consultada por el servicio
         when(instrumentoRepository.findById(equipoId)).thenReturn(Optional.empty());
         when(electronicaRepository.findById(equipoId)).thenReturn(Optional.of(el));
 

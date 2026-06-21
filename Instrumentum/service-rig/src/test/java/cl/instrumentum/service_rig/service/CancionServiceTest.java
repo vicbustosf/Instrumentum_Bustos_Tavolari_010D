@@ -23,11 +23,10 @@ public class CancionServiceTest {
     private CancionRepository cancionRepository;
 
     @InjectMocks
-    private RigService rigService; // El servicio bajo prueba que contiene la lógica de canciones
+    private RigService rigService;
 
     @Test
     public void listarCancionesTest() {
-        // Arrange
         Long bandaId = 1L;
         List<Cancion> cancionesSimuladas = List.of(
             new Cancion(1L, "Cancion A", bandaId, 180, new ArrayList<>()),
@@ -35,10 +34,8 @@ public class CancionServiceTest {
         );
         when(cancionRepository.findByBandaId(bandaId)).thenReturn(cancionesSimuladas);
 
-        // Act
         List<Cancion> resultado = rigService.listarCancionesPorBanda(bandaId);
 
-        // Assert
         assertNotNull(resultado);
         assertEquals(2, resultado.size());
         assertEquals("Cancion A", resultado.get(0).getNombre());
@@ -47,15 +44,12 @@ public class CancionServiceTest {
 
     @Test
     public void buscarCancionPorIdTest() {
-        // Arrange
         Long cancionId = 1L;
         Cancion cancionSimulada = new Cancion(cancionId, "Cancion A", 1L, 180, new ArrayList<>());
         when(cancionRepository.findById(cancionId)).thenReturn(Optional.of(cancionSimulada));
 
-        // Act
         Optional<Cancion> resultado = rigService.buscarCancionPorId(cancionId);
 
-        // Assert
         assertTrue(resultado.isPresent());
         assertEquals("Cancion A", resultado.get().getNombre());
         verify(cancionRepository, times(1)).findById(cancionId);

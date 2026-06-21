@@ -35,7 +35,6 @@ public class AuthServiceTest {
 
     @Test
     public void registrarUsuarioTest() {
-        // Arrange
         Usuario usuarioInput = new Usuario();
         usuarioInput.setNombreUsuario("diego.valdes");
         usuarioInput.setContrasena("rawPassword123");
@@ -46,10 +45,8 @@ public class AuthServiceTest {
         when(passwordEncoder.encode("rawPassword123")).thenReturn(passwordEncriptada);
         when(usuarioRepo.save(any(Usuario.class))).thenReturn(usuarioInput);
 
-        // Act
         String resultado = authService.registrar(usuarioInput);
 
-        // Assert
         assertEquals("Usuario registrado", resultado);
         assertEquals(passwordEncriptada, usuarioInput.getContrasena());
         verify(passwordEncoder).encode("rawPassword123");
@@ -58,7 +55,6 @@ public class AuthServiceTest {
 
     @Test
     public void loginUsuarioTest() {
-        // Arrange
         String nombreUsuario = "diego.valdes";
         String contrasenaPlana = "rawPassword123";
         String contrasenaEncriptada = "$2a$10$EncryptedPasswordStringHere";
@@ -79,10 +75,8 @@ public class AuthServiceTest {
         when(passwordEncoder.matches(contrasenaPlana, contrasenaEncriptada)).thenReturn(true);
         when(jwtService.generarToken(nombreUsuario, rolesEsperados)).thenReturn(tokenEsperado);
 
-        // Act
         String tokenObtenido = authService.login(nombreUsuario, contrasenaPlana);
 
-        // Assert
         assertNotNull(tokenObtenido);
         assertEquals(tokenEsperado, tokenObtenido);
         verify(usuarioRepo).findByNombreUsuario(nombreUsuario);

@@ -35,7 +35,6 @@ class CategoriaServiceTest {
 
     @BeforeEach
     void setUp() {
-        // CORRECCIÓN: Se cambió '1Long' por '1L'
         categoriaSample = new Categoria(1L, "Teclados");
     }
 
@@ -62,7 +61,6 @@ class CategoriaServiceTest {
 
     @Test
     void buscarCategoriaPorIdTest() {
-        // CORRECCIÓN: Uso de '1L' en lugar de '1Long'
         when(categoriaRepository.findById(1L)).thenReturn(Optional.of(categoriaSample));
 
         Optional<Categoria> resultado = inventarioService.obtenerCategoriaPorId(1L);
@@ -73,7 +71,6 @@ class CategoriaServiceTest {
 
     @Test
     void eliminarCategoriaTest() {
-        // CORRECCIÓN: Uso de '1L' en lugar de '1Long'
         when(categoriaRepository.existsById(1L)).thenReturn(true);
         when(equipoRepository.findByCategoria_Id(1L)).thenReturn(Collections.emptyList());
 

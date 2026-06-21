@@ -130,15 +130,12 @@ class GiraServiceTest {
 
     @Test
     void eliminarGiraTest() {
-        // Arreglar los mocks necesarios para el flujo feliz
         when(giraRepository.existsById(1L)).thenReturn(true);
         when(paradaRepository.obtenerPorIdGira(1L)).thenReturn(new ArrayList<>());
         doNothing().when(giraRepository).deleteById(1L);
         
-        // Ejecutar el método bajo prueba
         boolean resultado = giraService.eliminarGira(1L);
 
-        // Verificar los resultados
         assertTrue(resultado);
         verify(giraRepository, times(1)).existsById(1L);
         verify(paradaRepository, times(1)).obtenerPorIdGira(1L);

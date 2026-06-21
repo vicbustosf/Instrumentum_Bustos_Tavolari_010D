@@ -35,7 +35,6 @@ class MarcaServiceTest {
 
     @BeforeEach
     void setUp() {
-        // CORRECCIÓN: Se cambió '1Long' por '1L'
         marcaSample = new Marca(1L, "Gibson");
     }
 
@@ -62,7 +61,6 @@ class MarcaServiceTest {
 
     @Test
     void buscarMarcaPorIdTest() {
-        // CORRECCIÓN: Uso de '1L' en lugar de '1Long'
         when(marcaRepository.findById(1L)).thenReturn(Optional.of(marcaSample));
 
         Optional<Marca> resultado = inventarioService.obtenerMarcaPorId(1L);
@@ -73,7 +71,6 @@ class MarcaServiceTest {
 
     @Test
     void eliminarMarcaTest() {
-        // CORRECCIÓN: Uso de '1L' en lugar de '1Long'
         when(marcaRepository.existsById(1L)).thenReturn(true);
         when(equipoRepository.findByMarca_Id(1L)).thenReturn(Collections.emptyList());
 

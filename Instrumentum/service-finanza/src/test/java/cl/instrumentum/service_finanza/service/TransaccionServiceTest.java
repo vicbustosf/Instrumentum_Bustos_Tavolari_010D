@@ -69,13 +69,10 @@ public class TransaccionServiceTest {
 
     @Test
     public void listarTransaccionesTest() {
-        // Arrange
         when(transaccionRepository.findAll()).thenReturn(List.of(transaccionBase));
 
-        // Act
         List<Transaccion> resultado = transaccionService.listarTransacciones();
 
-        // Assert
         assertNotNull(resultado);
         assertEquals(1, resultado.size());
         verify(transaccionRepository).findAll();
@@ -83,13 +80,10 @@ public class TransaccionServiceTest {
 
     @Test
     public void buscarTransaccionPorIdTest() {
-        // Arrange
         when(transaccionRepository.findById(1L)).thenReturn(Optional.of(transaccionBase));
 
-        // Act
         Optional<Transaccion> resultado = transaccionService.buscarPorId(1L);
 
-        // Assert
         assertTrue(resultado.isPresent());
         assertEquals(1L, resultado.get().getIdTransaccion());
         verify(transaccionRepository).findById(1L);
@@ -97,14 +91,11 @@ public class TransaccionServiceTest {
 
     @Test
     public void guardarTransaccionTest() {
-        // Arrange
         mockWebClientFlujoFeliz();
         when(transaccionRepository.save(any(Transaccion.class))).thenReturn(transaccionBase);
 
-        // Act
         Transaccion resultado = transaccionService.guardarTransaccion(transaccionBase);
 
-        // Assert
         assertNotNull(resultado);
         assertEquals("ingreso", resultado.getTipoMovimiento());
         verify(transaccionRepository).save(transaccionBase);
@@ -112,17 +103,14 @@ public class TransaccionServiceTest {
 
     @Test
     public void actualizarTransaccionTest() {
-        // Arrange
         mockWebClientFlujoFeliz();
         Transaccion datosActualizados = new Transaccion(null, 10L, "egreso", 50000.0, LocalDate.now(), "Compra Cuerdas");
         
         when(transaccionRepository.findById(1L)).thenReturn(Optional.of(transaccionBase));
         when(transaccionRepository.save(any(Transaccion.class))).thenReturn(transaccionBase);
 
-        // Act
         Transaccion resultado = transaccionService.actualizarTransaccion(1L, datosActualizados);
 
-        // Assert
         assertNotNull(resultado);
         assertEquals("egreso", resultado.getTipoMovimiento());
         assertEquals(50000.0, resultado.getMonto());
@@ -132,13 +120,10 @@ public class TransaccionServiceTest {
 
     @Test
     public void eliminarTransaccionTest() {
-        // Arrange
         when(transaccionRepository.existsById(1L)).thenReturn(true);
 
-        // Act
         boolean resultado = transaccionService.eliminarTransaccion(1L);
 
-        // Assert
         assertTrue(resultado);
         verify(transaccionRepository).existsById(1L);
         verify(transaccionRepository).deleteById(1L);
@@ -146,13 +131,10 @@ public class TransaccionServiceTest {
 
     @Test
     public void obtenerTransaccionesPorBandaTest() {
-        // Arrange
         when(transaccionRepository.findByIdBanda(10L)).thenReturn(List.of(transaccionBase));
 
-        // Act
         List<Transaccion> resultado = transaccionService.obtenerPorBanda(10L);
 
-        // Assert
         assertNotNull(resultado);
         assertEquals(1, resultado.size());
         assertEquals(10L, resultado.get(0).getIdBanda());
