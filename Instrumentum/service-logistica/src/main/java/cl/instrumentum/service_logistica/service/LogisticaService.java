@@ -25,18 +25,6 @@ public class LogisticaService {
     @Autowired
     private WebClient.Builder webClientBuilder;
 
-    @PostConstruct
-    public void cargarDatosPrueba() {
-        if (contenedorRepository.count() > 0) return;
-
-        Contenedor c1 = contenedorRepository.save(
-            new Contenedor(null, 1L, "Flightcase Principal", 12.5, new ArrayList<>()));
-        Contenedor c2 = contenedorRepository.save(
-            new Contenedor(null, 1L, "Baul Pedales", 5.0, new ArrayList<>()));
-
-        contenedorEquipoRepository.save(new ContenedorEquipo(null, c1, 1L));
-        contenedorEquipoRepository.save(new ContenedorEquipo(null, c2, 4L));
-    }
 
 // ---------------- Validar banda y equipo ---------------- \\
 
