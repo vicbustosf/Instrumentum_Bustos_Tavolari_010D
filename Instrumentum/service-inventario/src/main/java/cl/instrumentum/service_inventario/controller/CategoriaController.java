@@ -17,9 +17,10 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
+@CrossOrigin(origins = "*") 
 @RestController
 @RequestMapping("/api/v2/categorias")
-@Tag(name = "Controlador de Categorías", description = "Endpoints para la parametrización de categorías del inventario")
+@Tag(name = "Categorías", description = "Endpoints para la parametrización de categorías del inventario")
 public class CategoriaController {
 
     @Autowired    

@@ -8,26 +8,21 @@ import org.springframework.web.bind.annotation.RestController;
 import cl.instrumentum.service_auth.dto.AuthRequest;
 import cl.instrumentum.service_auth.model.Usuario;
 import cl.instrumentum.service_auth.service.AuthService;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
 @RequestMapping("/auth")
-@Tag(name = "Autenticación", description = "Endpoints para registro y login de usuarios")
 public class AuthController {
 
     @Autowired
     private AuthService authService;
     
-    @Operation(summary = "Registrar un nuevo usuario", description = "Guarda el usuario con la contraseña encriptada")
     @PostMapping("/registrar")
     public ResponseEntity<String> registrar(@RequestBody Usuario usuario) {
         return ResponseEntity.ok(authService.registrar(usuario));
     }
 
-    @Operation(summary = "Iniciar sesión", description = "Retorna un Token JWT si las credenciales son válidas")
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody AuthRequest request){
         try{

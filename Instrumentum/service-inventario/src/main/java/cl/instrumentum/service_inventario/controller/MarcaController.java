@@ -17,9 +17,10 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
+@CrossOrigin(origins = "*") 
 @RestController
 @RequestMapping("/api/v2/marcas")
-@Tag(name = "Controlador de Marcas", description = "Endpoints para gestionar las marcas de los equipos")
+@Tag(name = "Marcas", description = "Endpoints para gestionar las marcas de los equipos")
 public class MarcaController {
 
     @Autowired

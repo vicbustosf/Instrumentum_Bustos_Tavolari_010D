@@ -69,14 +69,11 @@ public class EventoServiceTest {
 
     @Test
     public void listarEventosTest() {
-        // Arrange
         List<Evento> listaEventos = List.of(evento);
         when(eventoRepository.findAll()).thenReturn(listaEventos);
 
-        // Act
         List<Evento> resultado = eventoService.listarEventos();
 
-        // Assert
         assertNotNull(resultado);
         assertEquals(1, resultado.size());
         assertEquals("Concierto de Prueba", resultado.get(0).getNombre());
@@ -85,13 +82,10 @@ public class EventoServiceTest {
 
     @Test
     public void buscarEventoPorIdTest() {
-        // Arrange
         when(eventoRepository.findById(1L)).thenReturn(Optional.of(evento));
 
-        // Act
         Optional<Evento> resultado = eventoService.buscarPorId(1L);
 
-        // Assert
         assertTrue(resultado.isPresent());
         assertEquals(1L, resultado.get().getIdEvento());
         verify(eventoRepository, times(1)).findById(1L);
@@ -99,14 +93,11 @@ public class EventoServiceTest {
 
     @Test
     public void guardarEventoTest() {
-        // Arrange
         mockWebClientFlujoFeliz();
         when(eventoRepository.save(any(Evento.class))).thenReturn(evento);
 
-        // Act
         Evento resultado = eventoService.guardarEvento(evento);
 
-        // Assert
         assertNotNull(resultado);
         assertEquals(1L, resultado.getIdEvento());
         assertEquals(5L, resultado.getIdBanda());
@@ -115,17 +106,14 @@ public class EventoServiceTest {
 
     @Test
     public void actualizarEventoTest() {
-        // Arrange
         mockWebClientFlujoFeliz();
         Evento eventoModificado = new Evento(1L, 5L, "Nombre Actualizado", LocalDate.now(), "4,5");
         
         when(eventoRepository.findById(1L)).thenReturn(Optional.of(evento));
         when(eventoRepository.save(any(Evento.class))).thenReturn(eventoModificado);
 
-        // Act
         Evento resultado = eventoService.actualizarEvento(1L, eventoModificado);
 
-        // Assert
         assertNotNull(resultado);
         assertEquals("Nombre Actualizado", resultado.getNombre());
         assertEquals("4,5", resultado.getCanciones());
@@ -135,14 +123,11 @@ public class EventoServiceTest {
 
     @Test
     public void eliminarEventoTest() {
-        // Arrange
         when(eventoRepository.existsById(1L)).thenReturn(true);
         doNothing().when(eventoRepository).deleteById(1L);
 
-        // Act
         boolean resultado = eventoService.eliminarEvento(1L);
 
-        // Assert
         assertTrue(resultado);
         verify(eventoRepository, times(1)).existsById(1L);
         verify(eventoRepository, times(1)).deleteById(1L);
@@ -150,14 +135,11 @@ public class EventoServiceTest {
 
     @Test
     public void obtenerEventoPorBandaTest() {
-        // Arrange
         List<Evento> listaPorBanda = List.of(evento);
         when(eventoRepository.findByIdBanda(5L)).thenReturn(listaPorBanda);
 
-        // Act
         List<Evento> resultado = eventoService.obtenerPorBanda(5L);
 
-        // Assert
         assertNotNull(resultado);
         assertEquals(1, resultado.size());
         assertEquals(5L, resultado.get(0).getIdBanda());

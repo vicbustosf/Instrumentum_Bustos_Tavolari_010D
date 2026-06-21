@@ -14,9 +14,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@CrossOrigin(origins = "*") 
 @RestController
 @RequestMapping("/api/v2/eventos")
-@Tag(name = "Controlador de Eventos", description = "Endpoints para la gestión integral de eventos musicales")
+@Tag(name = "Eventos", description = "Endpoints para la gestión integral de eventos musicales")
 public class EventoController {
 
     @Autowired

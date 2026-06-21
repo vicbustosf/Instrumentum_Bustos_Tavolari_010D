@@ -17,9 +17,10 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 // para consultar si un equipo está asignado a alguna canción, 
 // sin necesidad de traer toda la info del rig.
 
+@CrossOrigin(origins = "*") 
 @RestController
 @RequestMapping("/api/v2/equipos")
-@Tag(name = "Controlador Auxiliar de Equipos", description = "Endpoints de soporte rápido para otros microservicios (como Inventario)")
+@Tag(name = "Auxiliar de Equipos", description = "Endpoints de soporte rápido para otros microservicios (como Inventario)")
 public class EquipoAuxController {
 
     @Autowired

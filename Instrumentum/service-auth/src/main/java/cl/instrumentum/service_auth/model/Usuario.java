@@ -20,7 +20,9 @@ public class Usuario {
 
     @Column(unique = true)
     private String nombreUsuario;
+
     private String contrasena;
+
     private String correo;
 
     @ManyToMany(fetch = FetchType.EAGER)

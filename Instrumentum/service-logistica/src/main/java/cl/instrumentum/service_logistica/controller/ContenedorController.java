@@ -69,7 +69,6 @@ public class ContenedorController {
 // Actualizar contenedor
     @Operation(summary = "Actualizar un contenedor", description = "Modifica los datos de nombre o peso de un contenedor usando su ID")
     @PutMapping("/{id}")
-
     public ResponseEntity<String> actualizar(@PathVariable Long id, @RequestBody Contenedor datos) {
         return logisticaService.buscarPorId(id)
                 .map(c -> {

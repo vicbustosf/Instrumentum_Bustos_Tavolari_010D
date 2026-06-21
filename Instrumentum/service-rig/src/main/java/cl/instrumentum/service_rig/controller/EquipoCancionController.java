@@ -14,11 +14,11 @@ import cl.instrumentum.service_rig.model.EquipoCancion;
 import cl.instrumentum.service_rig.service.RigService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import cl.instrumentum.service_rig.repository.CancionRepository;
 
+@CrossOrigin(origins = "*") 
 @RestController
 @RequestMapping("/api/v2/canciones")
-@Tag(name = "Controlador de Asignación de Equipos", description = "Endpoints para gestionar la cadena de efectos (equipos) de las canciones")
+@Tag(name = "Asignación de Equipos", description = "Endpoints para gestionar la cadena de efectos (equipos) de las canciones")
 public class EquipoCancionController {
 
     @Autowired

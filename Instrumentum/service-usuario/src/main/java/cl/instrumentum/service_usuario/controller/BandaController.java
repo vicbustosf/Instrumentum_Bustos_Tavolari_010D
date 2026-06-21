@@ -14,9 +14,10 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
+@CrossOrigin(origins = "*") 
 @RestController
 @RequestMapping("/api/v2/bandas")
-@Tag(name = "Controlador de Bandas", description = "Endpoints para la gestión de bandas musicales")
+@Tag(name = "Bandas", description = "Endpoints para la gestión de bandas musicales")
 public class BandaController {
 
     @Autowired

@@ -17,9 +17,10 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
+@CrossOrigin(origins = "*") 
 @RestController
 @RequestMapping("/api/v2/giras")
-@Tag(name = "Controlador de Giras", description = "Endpoints para la gestión del ciclo de vida y consultas de Giras musicales")
+@Tag(name = "Giras", description = "Endpoints para la gestión del ciclo de vida y consultas de Giras musicales")
 public class GiraController {
 
     @Autowired

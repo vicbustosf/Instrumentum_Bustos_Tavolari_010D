@@ -14,9 +14,10 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
+@CrossOrigin(origins = "*") 
 @RestController
 @RequestMapping("/api/v2/usuarios")
-@Tag(name = "Controlador de Usuarios", description = "Endpoints para la gestión de usuarios integrantes de bandas")
+@Tag(name = "Usuarios", description = "Endpoints para la gestión de usuarios integrantes de bandas")
 public class UsuarioController {
 
     @Autowired

@@ -17,9 +17,10 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
+@CrossOrigin(origins = "*") 
 @RestController
 @RequestMapping("/api/v2/especs")
-@Tag(name = "Controlador de Specs", description = "Endpoints para la gestión de especificación de equipos")
+@Tag(name = "Specs", description = "Endpoints para la gestión de especificación de equipos")
 public class EspecsController {
 
     @Autowired
