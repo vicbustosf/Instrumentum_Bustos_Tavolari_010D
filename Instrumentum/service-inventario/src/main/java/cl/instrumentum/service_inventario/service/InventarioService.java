@@ -177,7 +177,7 @@ public class InventarioService {
         }
 
         // =========================================================
-        // NUEVO: Notificar a Logística para eliminar de contenedores
+        // Notificar a Logística para eliminar de contenedores
         // =========================================================
         try {
             webClientBuilder.build()
