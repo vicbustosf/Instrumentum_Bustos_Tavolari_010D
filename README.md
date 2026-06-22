@@ -482,7 +482,7 @@ Si se necesita inspeccionar un microservicio de forma aislada (sin pasar por el 
 
 El siguiente diagrama representa el modelo de datos distribuido entre los distintos microservicios, normalizado en Tercera Forma Normal (3FN):
 
-![Modelo Entidad-Relación — Instrumentum](images/MER_Instrumentum_3FN_v3.jpg)
+![Modelo Entidad-Relación — Instrumentum](images/MER_Instrumentum_3FN_v3.png)
 
 ### Descripción de Entidades Principales
 
