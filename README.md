@@ -135,14 +135,13 @@ Asignación de equipamiento según el repertorio:
 - **RF-02** Módulo de Mantenimiento Preventivo: Registro de servicios por equipo. Lógica de verificación para equipos con más de 6 meses sin servicio.
 - **RF-03** Configuración por Canción (Rig Builder): CRUD de canciones con asignación N:N de equipos, incluyendo orden de cadena de señal y seteo de perillas.
 - **RF-04** Gestión de Usuarios y Bandas: Registro y administración de usuarios y sus agrupaciones musicales.
-- **RF-05** Calculadora de Carga: Algoritmo para sumar consumo (mA) por canción y comparar contra el límite de la fuente de poder.
-- **RF-06** Búsqueda y Filtros: Búsqueda de equipos por nombre, marca o categoría mediante *query params*.
-- **RF-07** Gestión de Eventos: CRUD de eventos/conciertos asociados a una banda y a un repertorio de canciones.
-- **RF-08** Gestión de Giras: CRUD de giras y de sus paradas logísticas (ciudad, alojamiento, transporte).
-- **RF-09** Gestión de Logística: Organización de equipos dentro de contenedores de transporte para shows y giras.
-- **RF-10** Gestión Financiera: Registro de transacciones (ingresos/egresos) por banda.
-- **RF-11** Gestión de Merchandising: CRUD de productos comerciales y registro de ventas con descuento automático de stock.
-- **RF-12** Autenticación y Autorización: Registro de usuarios, login con generación de JWT y protección de los endpoints de negocio mediante el API Gateway.
+- **RF-05** Búsqueda y Filtros: Búsqueda de equipos por nombre, marca o categoría mediante *query params*.
+- **RF-06** Gestión de Eventos: CRUD de eventos/conciertos asociados a una banda y a un repertorio de canciones.
+- **RF-07** Gestión de Giras: CRUD de giras y de sus paradas logísticas (ciudad, alojamiento, transporte).
+- **RF-08** Gestión de Logística: Organización de equipos dentro de contenedores de transporte para shows y giras.
+- **RF-09** Gestión Financiera: Registro de transacciones (ingresos/egresos) por banda.
+- **RF-10** Gestión de Merchandising: CRUD de productos comerciales y registro de ventas con descuento automático de stock.
+- **RF-11** Autenticación y Autorización: Registro de usuarios, login con generación de JWT y protección de los endpoints de negocio mediante el API Gateway.
 
 ---
 
