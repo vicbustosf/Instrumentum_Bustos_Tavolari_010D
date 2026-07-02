@@ -27,3 +27,12 @@ public class JwtService {
     }
 }
 
+/* Entonces, resumiendo,
+Cuando la clase JwtService ejecuta el método .signWith(..., SignatureAlgorithm.HS256), ocurre lo siguiente:
+
+1.- El algoritmo toma la primera parte del token (el Header)
+2.- Toma la segunda parte del token (el Payload, donde está el username y los roles).
+3.- Toma la Llave Secreta del servidor.
+4.- Mezcla estos tres elementos y los pasa por la "licuadora" del HS256.
+
+El resultado matemático de esa mezcla es la Firma (Signature), que se convierte en la tercera y última parte del token */
